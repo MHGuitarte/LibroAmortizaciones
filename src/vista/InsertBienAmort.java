@@ -1,6 +1,8 @@
 package vista;
 
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.JDialog;
 import javax.swing.JFrame;
@@ -8,7 +10,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-public class InsertBienAmort extends JDialog {
+public class InsertBienAmort extends JDialog implements ActionListener {
 
 	/**
 	 * 
@@ -65,6 +67,7 @@ public class InsertBienAmort extends JDialog {
 		insBA_panel.add(insBA_lAnyo);
 		insBA_panel.add(insBA_tfAnyo);
 
+		this.setTitle("Insertar Bien Amortizable");
 		this.setSize(640, 480);
 		this.setResizable(true);
 		this.add(insBA_panel);
@@ -97,6 +100,12 @@ public class InsertBienAmort extends JDialog {
 
 	public JTextField getInsBA_tfAnyo() {
 		return insBA_tfAnyo;
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent evt) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

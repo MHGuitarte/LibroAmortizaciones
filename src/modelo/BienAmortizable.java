@@ -131,8 +131,6 @@ public class BienAmortizable {
 	}
 
 	public void update(Connection conn, String row) {
-		
-		//UPDATE solo controla ciertos campos que podrán alterarse, el resto no
 
 		try {
 			st = conn.prepareStatement("UPDATE bien_amortizable SET ? = ? WHERE id = ?");
@@ -179,11 +177,11 @@ public class BienAmortizable {
 
 				break;
 			}
-			
+
 			default: {
-				System.out.println("El campo al que trata de acceder no es actualizable "
-						+ "o no se encuentra en esta tabla.");
-				
+				System.out.println(
+						"El campo al que trata de acceder no es actualizable " + "o no se encuentra en esta tabla.");
+
 				break;
 			}
 
@@ -197,8 +195,35 @@ public class BienAmortizable {
 
 	}
 
+	
+	
 	private String PostgreSQLErrorHandling(SQLException error) {
 		String responseStatement = "Error Code (0): Error no encontrado.";
+
+		switch (error.getSQLState()) {
+
+		case "08000": {
+			responseStatement = "Error Code (80000): No se ha encontrado una conexión activa.";
+			break;
+		}
+
+		case "22000": {
+			// Esto se puede amplificar con los tipos de datos incorrectos
+			responseStatement = "Error Code (22000): Error encontrado en la inserción de datos. Por favor, revise los datos e inténtelo de nuevo.";
+			break;
+		}
+
+		case "23502": {
+			responseStatement = "Error Code (23502): Se ha introducido un valor nulo en un campo no nulo. Por favor, revise su consulta e inténtelo de nuevo.";
+			break;
+		}
+
+		case "23503": {
+			responseStatement = "Error Code (23503):Se ha introducido un valor en un campo con clave foránea, pero no se han encontrado claves primarias coincidentes.";
+			break;
+		}
+		//TODO: Finish Error Code Handling
+		}
 
 		return responseStatement;
 	}
