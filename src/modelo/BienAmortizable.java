@@ -13,6 +13,7 @@ public class BienAmortizable {
 	private BigDecimal precio, porcent_amort;
 	private int anyo_adquisicion, tiempo_amort;
 	private PreparedStatement st;
+	private ResultSet res;
 
 	// Constructors
 
@@ -131,8 +132,6 @@ public class BienAmortizable {
 	}
 
 	public void update(Connection conn, String row) {
-		
-		//UPDATE solo controla ciertos campos que podrán alterarse, el resto no
 
 		try {
 			st = conn.prepareStatement("UPDATE bien_amortizable SET ? = ? WHERE id = ?");
@@ -179,11 +178,11 @@ public class BienAmortizable {
 
 				break;
 			}
-			
+
 			default: {
-				System.out.println("El campo al que trata de acceder no es actualizable "
-						+ "o no se encuentra en esta tabla.");
-				
+				System.out.println(
+						"El campo al que trata de acceder no es actualizable " + "o no se encuentra en esta tabla.");
+
 				break;
 			}
 
@@ -197,8 +196,99 @@ public class BienAmortizable {
 
 	}
 
+	public void selectOne(Connection conn) {
+		try {
+
+			// Comprobamos si el usuario ha introducido la id para la selección, si no,
+			// seleccionamos el primer valor de la tabla
+			if (this.id != null && this.id != "") {
+				st = conn.prepareStatement("SELECT * FROM bien_amortizable WHERE id = ?");
+				st.setString(1, this.id);
+
+			} else {
+				st = conn.prepareStatement("SELECT * FROM bien_amortizable LIMIT 1");
+			}
+
+			res = st.executeQuery();
+
+			// Devolvemos toda la selección dentro del mismo objeto que la llama
+
+			this.id = res.getString("id");
+			this.tipo = res.getString("tipo_bien");
+			this.nombre = res.getString("nombre");
+			this.precio = res.getBigDecimal("precio");
+			this.porcent_amort = res.getBigDecimal("porcentaje_amor");
+			this.tiempo_amort = res.getInt("tiempo_amor");
+			this.anyo_adquisicion = res.getInt("anio_adquisicion");
+
+		} catch (SQLException e) {
+			PostgreSQLErrorHandling(e);
+		}
+	}
+
+	public void selectNext(Connection conn) {
+		try {
+
+			// Repetimos el proceso de selectOne, pero si esta vez no encuentra id en el
+			// objeto, mostrará la segunda entrada de la tabla (next from first).
+			if (this.id != null && this.id != "") {
+				st = conn.prepareStatement("SELECT * FROM tipo_bien WHERE id > ? ORDER BY id LIMIT 1");
+				st.setString(1, this.id);
+
+			} else {
+				st = conn.prepareStatement("SELECT * FROM tipo_bien WHERE id > 'EP0001' ORDER BY id LIMIT 1");
+			}
+
+			res = st.executeQuery();
+
+			// Devolvemos toda la selección dentro del mismo objeto que la llama
+			// TODO: ¿Esto es más óptimo que devolver el ResultSet?
+
+			this.id = res.getString("id");
+			this.tipo = res.getString("tipo_bien");
+			this.nombre = res.getString("nombre");
+			this.precio = res.getBigDecimal("precio");
+			this.porcent_amort = res.getBigDecimal("porcentaje_amor");
+			this.tiempo_amort = res.getInt("tiempo_amor");
+			this.anyo_adquisicion = res.getInt("anio_adquisicion");
+
+		} catch (SQLException e) {
+			PostgreSQLErrorHandling(e);
+		}
+	}
+
 	private String PostgreSQLErrorHandling(SQLException error) {
-		String responseStatement = "Error Code (0): Error no encontrado.";
+		String responseStatement = "";
+
+		switch (error.getSQLState()) {
+
+		case "08000": {
+			responseStatement = "Error Code (80000): No se ha encontrado una conexión activa.";
+			break;
+		}
+
+		case "22000": {
+			// Esto se puede amplificar con los tipos de datos incorrectos
+			responseStatement = "Error Code (22000): Error encontrado en la inserción de datos. Por favor, revise los datos e inténtelo de nuevo.";
+			break;
+		}
+
+		case "23502": {
+			responseStatement = "Error Code (23502): Se ha introducido un valor nulo en un campo no nulo. Por favor, revise su consulta e inténtelo de nuevo.";
+			break;
+		}
+
+		case "23503": {
+			responseStatement = "Error Code (23503):Se ha introducido un valor en un campo con clave foránea, pero no se han encontrado claves primarias coincidentes.";
+			break;
+		}
+
+		default: {
+			responseStatement = "Error Code (0): Error no encontrado.";
+		}
+
+		// TODO: Finish Error Code Handling
+		}
 
 		return responseStatement;
 	}
