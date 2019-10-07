@@ -8,58 +8,57 @@ import java.sql.SQLException;
 
 import Utils.PostgreSQLHandler;
 
-public class TipoBien {
+public class Amortizacion {
 
-	private String id, elem_patr;
-	private int tiempo_limite;
-	private BigDecimal porcentaje_max;
+	private String bien_amortizable;
+	private int anyo;
+	private BigDecimal valor_amort, valor_acum;
 	private PreparedStatement st;
 	private ResultSet res;
 
-	// Constructors
-
-	public TipoBien() {
+	public Amortizacion() {
 	}
 
-	public TipoBien(String id, String elem_patr, int tiempo_limite, BigDecimal porcentaje_max) {
-		this.id = id;
-		this.elem_patr = elem_patr;
-		this.tiempo_limite = tiempo_limite;
-		this.porcentaje_max = porcentaje_max;
+	public Amortizacion(String bien_amortizable, int anyo, BigDecimal valor_amort, BigDecimal valor_acum) {
+
+		this.bien_amortizable = bien_amortizable;
+		this.anyo = anyo;
+		this.valor_amort = valor_amort;
+		this.valor_acum = valor_acum;
 	}
 
 	// Getter & Setter
 
-	public String getId() {
-		return id;
+	public String getBien_amortizable() {
+		return bien_amortizable;
 	}
 
-	public void setId(String id) {
-		this.id = id;
+	public void setBien_amortizable(String bien_amortizable) {
+		this.bien_amortizable = bien_amortizable;
 	}
 
-	public String getElem_patr() {
-		return elem_patr;
+	public int getAnyo() {
+		return anyo;
 	}
 
-	public void setElem_patr(String elem_patr) {
-		this.elem_patr = elem_patr;
+	public void setAnyo(int anyo) {
+		this.anyo = anyo;
 	}
 
-	public int getTiempo_limite() {
-		return tiempo_limite;
+	public BigDecimal getValor_amort() {
+		return valor_amort;
 	}
 
-	public void setTiempo_limite(int tiempo_limite) {
-		this.tiempo_limite = tiempo_limite;
+	public void setValor_amort(BigDecimal valor_amort) {
+		this.valor_amort = valor_amort;
 	}
 
-	public BigDecimal getPorcentaje_max() {
-		return porcentaje_max;
+	public BigDecimal getValor_acum() {
+		return valor_acum;
 	}
 
-	public void setPorcentaje_max(BigDecimal porcentaje_max) {
-		this.porcentaje_max = porcentaje_max;
+	public void setValor_acum(BigDecimal valor_acum) {
+		this.valor_acum = valor_acum;
 	}
 
 	// CRUD -----------------------
@@ -68,12 +67,12 @@ public class TipoBien {
 
 		try {
 			st = conn.prepareStatement(
-					"INSERT INTO tipo_bien(id, elem_patr, tiempo_limite, porcentaje_max) VALUES (?, ?, ?, ?)");
+					"INSERT INTO amortizacion(bien_amortizable, anio, valor_amor, valor_acumulado) VALUES (?, ?, ?, ?)");
 
-			st.setString(1, this.id);
-			st.setString(2, this.elem_patr);
-			st.setInt(3, this.tiempo_limite);
-			st.setBigDecimal(4, this.porcentaje_max);
+			st.setString(1, this.bien_amortizable);
+			st.setInt(2, this.anyo);
+			st.setBigDecimal(3, this.valor_amort);
+			st.setBigDecimal(4, this.valor_acum);
 
 		} catch (SQLException e) {
 			PostgreSQLHandler handler = new PostgreSQLHandler(e);
@@ -84,8 +83,9 @@ public class TipoBien {
 	public void delete(Connection conn) {
 
 		try {
-			st = conn.prepareStatement("DELETE FROM tipo_bien WHERE id = ?");
-			st.setString(1, this.id);
+			st = conn.prepareStatement("DELETE FROM amortizacion WHERE bien_amortizable = ? AND anio = ?");
+			st.setString(1, this.bien_amortizable);
+			st.setInt(2, this.anyo);
 
 			st.execute();
 		} catch (SQLException e) {
@@ -97,21 +97,15 @@ public class TipoBien {
 	public void update(Connection conn, String row) {
 
 		try {
-			st = conn.prepareStatement("UPDATE tipo_bien SET ? = ? WHERE id = ?");
+			st = conn.prepareStatement("UPDATE amortizacion SET ? = ? WHERE bien_amortizable = ? AND anio = ?");
 
 			switch (row.toLowerCase()) {
 
-			case "elem_patr": {
-				st.setString(1, "elem_patr");
-				st.setString(2, this.elem_patr);
-				st.setString(3, this.id);
+			// TODO: FINISH WITH CRUD METHODS
 
-				break;
-			}
-
-			case "tiempo_limite": {
-				st.setString(1, "tiempo_limite");
-				st.setInt(2, this.tiempo_limite);
+			case "valor_amort": {
+				st.setString(1, "valor_amort");
+				st.setBigDecimal(2, this.valor_amort);
 				st.setString(3, this.id);
 
 				st.execute();
@@ -149,11 +143,11 @@ public class TipoBien {
 			// Comprobamos si el usuario ha introducido la id para la selección, si no,
 			// seleccionamos el primer valor de la tabla
 			if (this.id != null && this.id != "") {
-				st = conn.prepareStatement("SELECT * FROM tipo_bien WHERE id = ?");
+				st = conn.prepareStatement("SELECT * FROM amortizacion WHERE bien_amortizable = ? AND anio = ?");
 				st.setString(1, this.id);
 
 			} else {
-				st = conn.prepareStatement("SELECT * FROM tipo_bien LIMIT 1");
+				st = conn.prepareStatement("SELECT * FROM amortizacion LIMIT 1");
 			}
 
 			res = st.executeQuery();
@@ -177,11 +171,12 @@ public class TipoBien {
 			// Repetimos el proceso de selectOne, pero si esta vez no encuentra id en el
 			// objeto, mostrará la segunda entrada de la tabla (next from first).
 			if (this.id != null && this.id != "") {
-				st = conn.prepareStatement("SELECT * FROM tipo_bien WHERE id > ? ORDER BY id LIMIT 1");
+				st = conn.prepareStatement("SELECT * FROM amortizacion WHERE bien_amortizable = ? AND anio = ?");
 				st.setString(1, this.id);
 
 			} else {
-				st = conn.prepareStatement("SELECT * FROM tipo_bien WHERE id > 'EP0001' ORDER BY id LIMIT 1");
+				st = conn.prepareStatement(
+						"SELECT * FROM amortizacion WHERE bien_amortizable = 'BA0001' GROUP BY bien_amortizable LIMIT 1");
 			}
 
 			res = st.executeQuery();
