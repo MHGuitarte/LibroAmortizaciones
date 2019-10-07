@@ -6,6 +6,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import Utils.PostgreSQLHandler;
+
 @SuppressWarnings("unused")
 public class BienAmortizable {
 
@@ -114,7 +116,8 @@ public class BienAmortizable {
 			 * + ");");
 			 */
 		} catch (SQLException e) {
-			PostgreSQLErrorHandling(e);
+			PostgreSQLHandler handler = new PostgreSQLHandler(e);
+			System.out.println(handler.safeErrorHandling());
 		}
 	}
 
@@ -126,8 +129,8 @@ public class BienAmortizable {
 
 			st.execute();
 		} catch (SQLException e) {
-			PostgreSQLErrorHandling(e);
-
+			PostgreSQLHandler handler = new PostgreSQLHandler(e);
+			System.out.println(handler.safeErrorHandling());
 		}
 	}
 
@@ -190,8 +193,8 @@ public class BienAmortizable {
 
 			st.execute();
 		} catch (SQLException e) {
-			PostgreSQLErrorHandling(e);
-
+			PostgreSQLHandler handler = new PostgreSQLHandler(e);
+			System.out.println(handler.safeErrorHandling());
 		}
 
 	}
@@ -222,7 +225,8 @@ public class BienAmortizable {
 			this.anyo_adquisicion = res.getInt("anio_adquisicion");
 
 		} catch (SQLException e) {
-			PostgreSQLErrorHandling(e);
+			PostgreSQLHandler handler = new PostgreSQLHandler(e);
+			System.out.println(handler.safeErrorHandling());
 		}
 	}
 
@@ -232,11 +236,11 @@ public class BienAmortizable {
 			// Repetimos el proceso de selectOne, pero si esta vez no encuentra id en el
 			// objeto, mostrará la segunda entrada de la tabla (next from first).
 			if (this.id != null && this.id != "") {
-				st = conn.prepareStatement("SELECT * FROM tipo_bien WHERE id > ? ORDER BY id LIMIT 1");
+				st = conn.prepareStatement("SELECT * FROM bien_amortizable WHERE id > ? ORDER BY id LIMIT 1");
 				st.setString(1, this.id);
 
 			} else {
-				st = conn.prepareStatement("SELECT * FROM tipo_bien WHERE id > 'EP0001' ORDER BY id LIMIT 1");
+				st = conn.prepareStatement("SELECT * FROM bien_amortizable WHERE id > 'BA0001' ORDER BY id LIMIT 1");
 			}
 
 			res = st.executeQuery();
@@ -253,44 +257,9 @@ public class BienAmortizable {
 			this.anyo_adquisicion = res.getInt("anio_adquisicion");
 
 		} catch (SQLException e) {
-			PostgreSQLErrorHandling(e);
+			PostgreSQLHandler handler = new PostgreSQLHandler(e);
+			System.out.println(handler.safeErrorHandling());
 		}
-	}
-
-	private String PostgreSQLErrorHandling(SQLException error) {
-		String responseStatement = "";
-
-		switch (error.getSQLState()) {
-
-		case "08000": {
-			responseStatement = "Error Code (80000): No se ha encontrado una conexión activa.";
-			break;
-		}
-
-		case "22000": {
-			// Esto se puede amplificar con los tipos de datos incorrectos
-			responseStatement = "Error Code (22000): Error encontrado en la inserción de datos. Por favor, revise los datos e inténtelo de nuevo.";
-			break;
-		}
-
-		case "23502": {
-			responseStatement = "Error Code (23502): Se ha introducido un valor nulo en un campo no nulo. Por favor, revise su consulta e inténtelo de nuevo.";
-			break;
-		}
-
-		case "23503": {
-			responseStatement = "Error Code (23503):Se ha introducido un valor en un campo con clave foránea, pero no se han encontrado claves primarias coincidentes.";
-			break;
-		}
-
-		default: {
-			responseStatement = "Error Code (0): Error no encontrado.";
-		}
-
-		// TODO: Finish Error Code Handling
-		}
-
-		return responseStatement;
 	}
 
 }
