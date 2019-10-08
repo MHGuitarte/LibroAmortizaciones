@@ -106,16 +106,18 @@ public class Amortizacion {
 			case "valor_amort": {
 				st.setString(1, "valor_amort");
 				st.setBigDecimal(2, this.valor_amort);
-				st.setString(3, this.id);
+				st.setString(3, this.bien_amortizable);
+				st.setInt(4, this.anyo);
 
 				st.execute();
 				break;
 			}
 
-			case "porcentaje_max": {
+			case "valor_acum": {
 				st.setString(1, "porcentaje_max");
-				st.setBigDecimal(2, this.porcentaje_max);
-				st.setString(3, this.id);
+				st.setBigDecimal(2, this.valor_acum);
+				st.setString(3, this.bien_amortizable);
+				st.setInt(4, this.anyo);
 
 				break;
 			}
@@ -142,9 +144,10 @@ public class Amortizacion {
 
 			// Comprobamos si el usuario ha introducido la id para la selección, si no,
 			// seleccionamos el primer valor de la tabla
-			if (this.id != null && this.id != "") {
+			if (this.bien_amortizable != null || this.bien_amortizable != "" || this.anyo != -1 || this.anyo != 0) {
 				st = conn.prepareStatement("SELECT * FROM amortizacion WHERE bien_amortizable = ? AND anio = ?");
-				st.setString(1, this.id);
+				st.setString(1, this.bien_amortizable);
+				st.setInt(2, anyo);
 
 			} else {
 				st = conn.prepareStatement("SELECT * FROM amortizacion LIMIT 1");
@@ -154,10 +157,10 @@ public class Amortizacion {
 
 			// Devolvemos toda la selección dentro del mismo objeto que la llama
 
-			this.id = res.getString("id");
-			this.elem_patr = res.getString("elem_patr");
-			this.tiempo_limite = res.getInt("tiempo_limite");
-			this.porcentaje_max = res.getBigDecimal("porcentaje_max");
+			this.bien_amortizable = res.getString("id");
+			this.anyo = res.getInt("anio");
+			this.valor_amort = res.getBigDecimal("valor_amor");
+			this.valor_acum = res.getBigDecimal("valor_acumulado");
 
 		} catch (SQLException e) {
 			PostgreSQLHandler handler = new PostgreSQLHandler(e);
@@ -170,9 +173,10 @@ public class Amortizacion {
 
 			// Repetimos el proceso de selectOne, pero si esta vez no encuentra id en el
 			// objeto, mostrará la segunda entrada de la tabla (next from first).
-			if (this.id != null && this.id != "") {
+			if (this.bien_amortizable != null || this.bien_amortizable != "" || this.anyo != -1 || this.anyo != 0) {
 				st = conn.prepareStatement("SELECT * FROM amortizacion WHERE bien_amortizable = ? AND anio = ?");
-				st.setString(1, this.id);
+				st.setString(1, this.bien_amortizable);
+				st.setInt(2, anyo);
 
 			} else {
 				st = conn.prepareStatement(
@@ -184,10 +188,10 @@ public class Amortizacion {
 			// Devolvemos toda la selección dentro del mismo objeto que la llama
 			// TODO: ¿Esto es más óptimo que devolver el ResultSet?
 
-			this.id = res.getString("id");
-			this.elem_patr = res.getString("elem_patr");
-			this.tiempo_limite = res.getInt("tiempo_limite");
-			this.porcentaje_max = res.getBigDecimal("porcentaje_max");
+			this.bien_amortizable = res.getString("id");
+			this.anyo = res.getInt("anio");
+			this.valor_amort = res.getBigDecimal("valor_amor");
+			this.valor_acum = res.getBigDecimal("valor_acumulado");
 
 		} catch (SQLException e) {
 			PostgreSQLHandler handler = new PostgreSQLHandler(e);
