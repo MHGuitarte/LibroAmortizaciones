@@ -10,7 +10,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-public class InsertBienAmort extends JDialog implements ActionListener {
+public class InsertBAView extends JDialog implements ActionListener {
 
 	/**
 	 * 
@@ -25,7 +25,7 @@ public class InsertBienAmort extends JDialog implements ActionListener {
 
 	private GridLayout gdl = new GridLayout(7, 2);
 
-	public InsertBienAmort(JFrame parent) {
+	public InsertBAView(JFrame parent) {
 		this.insBA_lId = new JLabel("Id");
 		this.insBA_lTipoBien = new JLabel("Tipo Bien");
 		this.insBA_lNombre = new JLabel("Nombre");
@@ -72,6 +72,7 @@ public class InsertBienAmort extends JDialog implements ActionListener {
 		this.setResizable(true);
 		this.add(insBA_panel);
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+		this.setLocationRelativeTo(null);
 	}
 
 	public JTextField getInsBA_tfId() {
