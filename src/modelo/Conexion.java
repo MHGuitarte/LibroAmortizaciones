@@ -4,10 +4,11 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+import javax.swing.JOptionPane;
+
 public class Conexion {
 
 	Connection connection;
-
 
 	private static final String DB_URL = "jdbc:postgresql://localhost/postgres";
 	private static final String USER = "usuario";
@@ -18,15 +19,17 @@ public class Conexion {
 			Class.forName("org.postgresql.Driver");
 
 			connection = DriverManager.getConnection(DB_URL, USER, PASS);
+
+			JOptionPane.showMessageDialog(null, "Conexión realizada correctamente en " + DB_URL);
 		} catch (SQLException | ClassNotFoundException e) {
 			e.printStackTrace();
 		}
 	}
-	
-	public Connection devolverConexion( ) {
+
+	public Connection devolverConexion() {
 		return connection;
 	}
-	
+
 	public void cerrarConexion() throws SQLException {
 		connection.close();
 	}
@@ -37,7 +40,5 @@ public class Conexion {
 		cerrarConexion();
 		super.finalize();
 	}
-	
-	
 
 }

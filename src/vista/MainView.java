@@ -23,13 +23,6 @@ public class MainView extends JFrame implements ActionListener {
 	private MainController mainController;
 
 	public MainView(MainController mainController) {
-		this.mainController = new MainController();
-		
-		this.setTitle("Libro Amortizaciones");
-		this.setSize(640, 480);
-		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-		this.setResizable(true);
-		this.setLocationRelativeTo(null);
 
 		main_menuBar = new JMenuBar();
 
@@ -39,6 +32,17 @@ public class MainView extends JFrame implements ActionListener {
 		main_itemUpdateTipoBien = new JMenuItem("Modificar Tipo Bien");
 		main_itemDeleteTipoBien = new JMenuItem("Borrar Tipo Bien");
 		main_itemSelectTipoBien = new JMenuItem("Consultar Tipo Bien");
+
+	}
+
+	public void loadWindow() {
+		this.mainController = new MainController();
+
+		this.setTitle("Libro Amortizaciones");
+		this.setSize(640, 480);
+		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+		this.setResizable(true);
+		this.setLocationRelativeTo(null);
 
 		main_menuTipoBien.add(main_itemSelectTipoBien);
 		main_menuTipoBien.add(main_itemInsertTipoBien);
@@ -53,7 +57,10 @@ public class MainView extends JFrame implements ActionListener {
 		main_menuBar.add(main_menuTipoBien);
 
 		this.setJMenuBar(main_menuBar);
+	}
 
+	public void showWindow() {
+		this.setVisible(true);
 	}
 
 	@Override

@@ -6,6 +6,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import javax.swing.JOptionPane;
+
 import Utils.PostgreSQLHandler;
 
 @SuppressWarnings("unused")
@@ -94,7 +96,7 @@ public class BienAmortizable {
 
 	// CRUD -----------------------
 
-	public void insert(Connection conn) {
+	public boolean insert(Connection conn) {
 
 		try {
 			st = conn.prepareStatement("INSERT INTO bien_amortizable(id, tipo_bien, nombre, precio,"
@@ -108,33 +110,33 @@ public class BienAmortizable {
 			st.setLong(6, this.tiempo_amort);
 			st.setLong(7, this.anyo_adquisicion);
 
-			/*
-			 * st.execute( "INSERT INTO bien_amortizable(id, tipo_bien, nombre, precio,
-			 * porcentaje_amor, tiempo_amor, anio_adquisicion) VALUES ('" + this.id + "', '"
-			 * + this.tipo + "', '" + this.nombre + "', " + this.precio + ", " +
-			 * this.porcent_amort + ", " + this.tiempo_amort + ", " + this.anyo_adquisicion
-			 * + ");");
-			 */
+			return true;
 		} catch (SQLException e) {
 			PostgreSQLHandler handler = new PostgreSQLHandler(e);
-			System.out.println(handler.safeErrorHandling());
+			JOptionPane.showMessageDialog(null, handler.safeErrorHandling());
+
+			return false;
 		}
 	}
 
-	public void delete(Connection conn) {
+	public boolean delete(Connection conn) {
 
 		try {
 			st = conn.prepareStatement("DELETE FROM bien_amortizable WHERE id = ?");
 			st.setString(1, this.id);
 
 			st.execute();
+
+			return true;
 		} catch (SQLException e) {
 			PostgreSQLHandler handler = new PostgreSQLHandler(e);
-			System.out.println(handler.safeErrorHandling());
+			JOptionPane.showMessageDialog(null, handler.safeErrorHandling());
+
+			return false;
 		}
 	}
 
-	public void update(Connection conn, String row) {
+	public boolean update(Connection conn, String row) {
 
 		try {
 			st = conn.prepareStatement("UPDATE bien_amortizable SET ? = ? WHERE id = ?");
@@ -183,23 +185,27 @@ public class BienAmortizable {
 			}
 
 			default: {
-				System.out.println(
+				JOptionPane.showMessageDialog(null,
 						"El campo al que trata de acceder no es actualizable " + "o no se encuentra en esta tabla.");
 
-				break;
+				return false;
 			}
 
 			}
 
 			st.execute();
+
+			return true;
 		} catch (SQLException e) {
 			PostgreSQLHandler handler = new PostgreSQLHandler(e);
-			System.out.println(handler.safeErrorHandling());
+			JOptionPane.showMessageDialog(null, handler.safeErrorHandling());
+
+			return false;
 		}
 
 	}
 
-	public void selectOne(Connection conn) {
+	public boolean selectOne(Connection conn) {
 		try {
 
 			// Comprobamos si el usuario ha introducido la id para la selección, si no,
@@ -224,13 +230,16 @@ public class BienAmortizable {
 			this.tiempo_amort = res.getInt("tiempo_amor");
 			this.anyo_adquisicion = res.getInt("anio_adquisicion");
 
+			return true;
 		} catch (SQLException e) {
 			PostgreSQLHandler handler = new PostgreSQLHandler(e);
-			System.out.println(handler.safeErrorHandling());
+			JOptionPane.showMessageDialog(null, handler.safeErrorHandling());
+
+			return false;
 		}
 	}
 
-	public void selectNext(Connection conn) {
+	public boolean selectNext(Connection conn) {
 		try {
 
 			// Repetimos el proceso de selectOne, pero si esta vez no encuentra id en el
@@ -256,10 +265,20 @@ public class BienAmortizable {
 			this.tiempo_amort = res.getInt("tiempo_amor");
 			this.anyo_adquisicion = res.getInt("anio_adquisicion");
 
+			return true;
 		} catch (SQLException e) {
 			PostgreSQLHandler handler = new PostgreSQLHandler(e);
-			System.out.println(handler.safeErrorHandling());
+			JOptionPane.showMessageDialog(null, handler.safeErrorHandling());
+
+			return false;
 		}
+	}
+
+	@Override
+	public String toString() {
+		// TODO Auto-generated method stub
+		return id + ", " + tipo + ", " + nombre + ", " + precio + ", " + porcent_amort + ", " + tiempo_amort + ", "
+				+ anyo_adquisicion + ". ";
 	}
 
 }

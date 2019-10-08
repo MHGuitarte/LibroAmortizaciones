@@ -3,12 +3,16 @@ package vista;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.math.BigDecimal;
 
+import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+
+import controlador.InsertBAController;
 
 public class InsertBAView extends JDialog implements ActionListener {
 
@@ -20,12 +24,19 @@ public class InsertBAView extends JDialog implements ActionListener {
 			insBA_lAnyo;
 	private JTextField insBA_tfId, insBA_tfTipoBien, insBA_tfNombre, insBA_tfPrecio, insBA_tfPorcentaje, insBA_tfTiempo,
 			insBA_tfAnyo;
+	private JButton insBA_btnConfirm, insBA_btnCancel;
 
 	private JPanel insBA_panel;
 
-	private GridLayout gdl = new GridLayout(7, 2);
+	private GridLayout gdl = new GridLayout(8, 2);
+	
+	private InsertBAController baController;
 
-	public InsertBAView(JFrame parent) {
+	public InsertBAView(JFrame parent, InsertBAController baController) {
+		super(parent);
+		
+		this.baController = baController;
+		
 		this.insBA_lId = new JLabel("Id");
 		this.insBA_lTipoBien = new JLabel("Tipo Bien");
 		this.insBA_lNombre = new JLabel("Nombre");
@@ -42,8 +53,13 @@ public class InsertBAView extends JDialog implements ActionListener {
 		this.insBA_tfTiempo = new JTextField();
 		this.insBA_tfAnyo = new JTextField();
 
-		this.insBA_panel = new JPanel();
+		this.insBA_btnConfirm = new JButton("Insertar");
+		this.insBA_btnCancel = new JButton("Cancelar");
 
+		this.insBA_panel = new JPanel();
+	}
+
+	public void loadWindow() {
 		insBA_panel.setLayout(gdl);
 
 		insBA_panel.add(insBA_lId);
@@ -67,6 +83,12 @@ public class InsertBAView extends JDialog implements ActionListener {
 		insBA_panel.add(insBA_lAnyo);
 		insBA_panel.add(insBA_tfAnyo);
 
+		insBA_panel.add(insBA_btnCancel);
+		insBA_panel.add(insBA_btnConfirm);
+
+		insBA_btnConfirm.addActionListener(this);
+		insBA_btnCancel.addActionListener(this);
+
 		this.setTitle("Insertar Bien Amortizable");
 		this.setSize(640, 480);
 		this.setResizable(true);
@@ -75,38 +97,52 @@ public class InsertBAView extends JDialog implements ActionListener {
 		this.setLocationRelativeTo(null);
 	}
 
-	public JTextField getInsBA_tfId() {
-		return insBA_tfId;
+	public void showWindow() {
+		this.setVisible(true);
 	}
 
-	public JTextField getInsBA_tfTipoBien() {
-		return insBA_tfTipoBien;
+	public String getInsBA_tfId() {
+		return insBA_tfId.getText();
 	}
 
-	public JTextField getInsBA_tfNombre() {
-		return insBA_tfNombre;
+	public String getInsBA_tfTipoBien() {
+		return insBA_tfTipoBien.getText();
 	}
 
-	public JTextField getInsBA_tfPrecio() {
-		return insBA_tfPrecio;
+	public String getInsBA_tfNombre() {
+		return insBA_tfNombre.getText();
 	}
 
-	public JTextField getInsBA_tfPorcentaje() {
-		return insBA_tfPorcentaje;
+	public BigDecimal getInsBA_tfPrecio() {
+		return new BigDecimal(insBA_tfPrecio.getText());
 	}
 
-	public JTextField getInsBA_tfTiempo() {
-		return insBA_tfTiempo;
+	public BigDecimal getInsBA_tfPorcentaje() {
+		return new BigDecimal(insBA_tfPorcentaje.getText());
 	}
 
-	public JTextField getInsBA_tfAnyo() {
-		return insBA_tfAnyo;
+	public int getInsBA_tfTiempo() {
+		return Integer.parseInt(insBA_tfTiempo.getText());
+	}
+
+	public int getInsBA_tfAnyo() {
+		return Integer.parseInt(insBA_tfAnyo.getText());
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent evt) {
-		// TODO Auto-generated method stub
+
+		switch (evt.getActionCommand()) {
+		case "Insertar": {
+			baController.insertBA();
+			
+			break;
+		}
 		
+		case "Cancelar": {
+			this.dispose();
+		}
+		}
 	}
 
 }
