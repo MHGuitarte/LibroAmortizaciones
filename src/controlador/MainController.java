@@ -1,6 +1,5 @@
 package controlador;
 
-import modelo.Conexion;
 import vista.MainView;
 
 //import java.sql.Connection;
@@ -8,11 +7,8 @@ import vista.MainView;
 public class MainController {
 
 	private MainView view;
-	private Conexion conexion;
-	
-	public void init(Conexion conexion) {
-		this.conexion = conexion;
-		
+
+	public void init() {
 		view = new MainView(this);
 		view.loadWindow();
 		view.showWindow();
@@ -20,7 +16,7 @@ public class MainController {
 
 	public void openInsertDialog() {
 		InsertBAController baController = new InsertBAController();
-		baController.init(view, conexion);
+		baController.init(view);
 	}
 
 	public void openUpdateDialog() {

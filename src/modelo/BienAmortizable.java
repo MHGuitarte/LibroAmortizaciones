@@ -10,7 +10,6 @@ import javax.swing.JOptionPane;
 
 import Utils.PostgreSQLHandler;
 
-@SuppressWarnings("unused")
 public class BienAmortizable {
 
 	private String id, nombre, tipo;
@@ -96,7 +95,7 @@ public class BienAmortizable {
 
 	// CRUD -----------------------
 
-	public boolean insert(Connection conn) {
+	public void insert(Connection conn) {
 
 		try {
 			st = conn.prepareStatement("INSERT INTO bien_amortizable(id, tipo_bien, nombre, precio,"
@@ -110,16 +109,16 @@ public class BienAmortizable {
 			st.setLong(6, this.tiempo_amort);
 			st.setLong(7, this.anyo_adquisicion);
 
-			return true;
+			st.execute();
+
 		} catch (SQLException e) {
 			PostgreSQLHandler handler = new PostgreSQLHandler(e);
 			JOptionPane.showMessageDialog(null, handler.safeErrorHandling());
 
-			return false;
 		}
 	}
 
-	public boolean delete(Connection conn) {
+	public void delete(Connection conn) {
 
 		try {
 			st = conn.prepareStatement("DELETE FROM bien_amortizable WHERE id = ?");
@@ -127,16 +126,14 @@ public class BienAmortizable {
 
 			st.execute();
 
-			return true;
 		} catch (SQLException e) {
 			PostgreSQLHandler handler = new PostgreSQLHandler(e);
 			JOptionPane.showMessageDialog(null, handler.safeErrorHandling());
 
-			return false;
 		}
 	}
 
-	public boolean update(Connection conn, String row) {
+	public void update(Connection conn, String row) {
 
 		try {
 			st = conn.prepareStatement("UPDATE bien_amortizable SET ? = ? WHERE id = ?");
@@ -188,24 +185,21 @@ public class BienAmortizable {
 				JOptionPane.showMessageDialog(null,
 						"El campo al que trata de acceder no es actualizable " + "o no se encuentra en esta tabla.");
 
-				return false;
 			}
 
 			}
 
 			st.execute();
 
-			return true;
 		} catch (SQLException e) {
 			PostgreSQLHandler handler = new PostgreSQLHandler(e);
 			JOptionPane.showMessageDialog(null, handler.safeErrorHandling());
 
-			return false;
 		}
 
 	}
 
-	public boolean selectOne(Connection conn) {
+	public void selectOne(Connection conn) {
 		try {
 
 			// Comprobamos si el usuario ha introducido la id para la selección, si no,
@@ -230,16 +224,14 @@ public class BienAmortizable {
 			this.tiempo_amort = res.getInt("tiempo_amor");
 			this.anyo_adquisicion = res.getInt("anio_adquisicion");
 
-			return true;
 		} catch (SQLException e) {
 			PostgreSQLHandler handler = new PostgreSQLHandler(e);
 			JOptionPane.showMessageDialog(null, handler.safeErrorHandling());
 
-			return false;
 		}
 	}
 
-	public boolean selectNext(Connection conn) {
+	public void selectNext(Connection conn) {
 		try {
 
 			// Repetimos el proceso de selectOne, pero si esta vez no encuentra id en el
@@ -265,12 +257,10 @@ public class BienAmortizable {
 			this.tiempo_amort = res.getInt("tiempo_amor");
 			this.anyo_adquisicion = res.getInt("anio_adquisicion");
 
-			return true;
 		} catch (SQLException e) {
 			PostgreSQLHandler handler = new PostgreSQLHandler(e);
 			JOptionPane.showMessageDialog(null, handler.safeErrorHandling());
 
-			return false;
 		}
 	}
 

@@ -11,8 +11,7 @@ public class InsertBAController {
 	private InsertBAView insBA;
 	private Conexion conexion;
 
-	public void init(JFrame parent, Conexion conexion) {
-		this.conexion = conexion;
+	public void init(JFrame parent) {
 
 		insBA = new InsertBAView(parent, this);
 		insBA.loadWindow();
@@ -27,10 +26,14 @@ public class InsertBAController {
 		System.out.println(bienAmortizable.toString());
 
 		try {
-			// TODO: Esto da puntero nulo; no se por qué
+			
+			conexion = new Conexion();
 			bienAmortizable.insert(conexion.devolverConexion());
+			
 		} catch (Exception e) {
 			e.printStackTrace();
+		} finally {
+			conexion.cerrarConexion();
 		}
 	}
 

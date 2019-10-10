@@ -4,8 +4,6 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-import javax.swing.JOptionPane;
-
 public class Conexion {
 
 	Connection connection;
@@ -20,18 +18,22 @@ public class Conexion {
 
 			connection = DriverManager.getConnection(DB_URL, USER, PASS);
 
-			JOptionPane.showMessageDialog(null, "Conexión realizada correctamente en " + DB_URL);
 		} catch (SQLException | ClassNotFoundException e) {
 			e.printStackTrace();
 		}
 	}
 
 	public Connection devolverConexion() {
+		System.out.println("Conexión devuelta");
 		return connection;
 	}
 
-	public void cerrarConexion() throws SQLException {
-		connection.close();
+	public void cerrarConexion() {
+		try {
+			connection.close();
+		} catch (SQLException e) {
+			System.out.println("Surgió un error al cerrar la conexión, inténtelo más tarde.");
+		}
 	}
 
 	@SuppressWarnings("deprecation")
