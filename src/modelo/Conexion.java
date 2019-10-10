@@ -1,4 +1,4 @@
-package modelo;
+package modelo;			// 
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -24,7 +24,6 @@ public class Conexion {
 	}
 
 	public Connection devolverConexion() {
-		System.out.println("Conexión devuelta");
 		return connection;
 	}
 

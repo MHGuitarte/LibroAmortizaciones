@@ -9,6 +9,7 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
@@ -20,10 +21,8 @@ public class InsertBAView extends JDialog implements ActionListener {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private JLabel insBA_lId, insBA_lTipoBien, insBA_lNombre, insBA_lPrecio, insBA_lPorcentaje, insBA_lTiempo,
-			insBA_lAnyo;
-	private JTextField insBA_tfId, insBA_tfTipoBien, insBA_tfNombre, insBA_tfPrecio, insBA_tfPorcentaje, insBA_tfTiempo,
-			insBA_tfAnyo;
+	private JLabel insBA_lId, insBA_lTipoBien, insBA_lNombre, insBA_lPrecio, insBA_lPorcentaje, insBA_lTiempo, insBA_lAnyo;
+	private JTextField insBA_tfId, insBA_tfTipoBien, insBA_tfNombre, insBA_tfPrecio, insBA_tfPorcentaje, insBA_tfTiempo, insBA_tfAnyo;
 	private JButton insBA_btnConfirm, insBA_btnCancel;
 
 	private JPanel insBA_panel;
@@ -145,4 +144,7 @@ public class InsertBAView extends JDialog implements ActionListener {
 		}
 	}
 
+	public void showMessage(String message) {
+		JOptionPane.showMessageDialog(this, message);
+	}
 }

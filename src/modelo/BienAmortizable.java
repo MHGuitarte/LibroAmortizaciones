@@ -95,27 +95,20 @@ public class BienAmortizable {
 
 	// CRUD -----------------------
 
-	public void insert(Connection conn) {
+	public void insert(Connection conn) throws SQLException {
+		st = conn.prepareStatement("INSERT INTO bien_amortizable(id, tipo_bien, nombre, precio,"
+				+ "porcentaje_amor, tiempo_amor, anio_adquisicion) VALUES" + "(?, ?, ?, ?, ?, ?, ?)");
 
-		try {
-			st = conn.prepareStatement("INSERT INTO bien_amortizable(id, tipo_bien, nombre, precio,"
-					+ "porcentaje_amor, tiempo_amor, anio_adquisicion) VALUES" + "(?, ?, ?, ?, ?, ?, ?)");
+		st.setString(1, this.id);
+		st.setString(2, this.tipo);
+		st.setString(3, this.nombre);
+		st.setBigDecimal(4, this.precio);
+		st.setBigDecimal(5, this.porcent_amort);
+		st.setLong(6, this.tiempo_amort);
+		st.setLong(7, this.anyo_adquisicion);
 
-			st.setString(1, this.id);
-			st.setString(2, this.tipo);
-			st.setString(3, this.nombre);
-			st.setBigDecimal(4, this.precio);
-			st.setBigDecimal(5, this.porcent_amort);
-			st.setLong(6, this.tiempo_amort);
-			st.setLong(7, this.anyo_adquisicion);
+		st.execute();
 
-			st.execute();
-
-		} catch (SQLException e) {
-			PostgreSQLHandler handler = new PostgreSQLHandler(e);
-			JOptionPane.showMessageDialog(null, handler.safeErrorHandling());
-
-		}
 	}
 
 	public void delete(Connection conn) {
@@ -129,13 +122,13 @@ public class BienAmortizable {
 		} catch (SQLException e) {
 			PostgreSQLHandler handler = new PostgreSQLHandler(e);
 			JOptionPane.showMessageDialog(null, handler.safeErrorHandling());
-
 		}
 	}
 
 	public void update(Connection conn, String row) {
-		
-		//TODO: Primero hay que comprobar que la tupla exista en la BDD, y ya luego hacemos el update
+
+		// TODO: Primero hay que comprobar que la tupla exista en la BDD, y ya luego
+		// hacemos el update
 
 		try {
 			st = conn.prepareStatement("UPDATE bien_amortizable SET ? = ? WHERE id = ?");
@@ -236,7 +229,7 @@ public class BienAmortizable {
 	public void selectNext(Connection conn) {
 		try {
 
-			// Repetimos el proceso de selectOne, pero si esta vez no encuentra id en  el
+			// Repetimos el proceso de selectOne, pero si esta vez no encuentra id en el
 			// objeto, mostrará la segunda entrada de la tabla (next from first).
 			if (this.id != null || this.id != "") {
 				st = conn.prepareStatement("SELECT * FROM bien_amortizable WHERE id > ? ORDER BY id LIMIT 1");
