@@ -8,8 +8,6 @@ import java.sql.SQLException;
 
 import javax.swing.JOptionPane;
 
-import Utils.PostgreSQLHandler;
-
 public class BienAmortizable {
 
 	private String id, nombre, tipo;
@@ -111,152 +109,126 @@ public class BienAmortizable {
 
 	}
 
-	public void delete(Connection conn) {
+	public void delete(Connection conn) throws SQLException {
 
-		try {
-			st = conn.prepareStatement("DELETE FROM bien_amortizable WHERE id = ?");
-			st.setString(1, this.id);
+		st = conn.prepareStatement("DELETE FROM bien_amortizable WHERE id = ?");
+		st.setString(1, this.id);
 
-			st.execute();
-
-		} catch (SQLException e) {
-			PostgreSQLHandler handler = new PostgreSQLHandler(e);
-			JOptionPane.showMessageDialog(null, handler.safeErrorHandling());
-		}
+		st.execute();
 	}
 
-	public void update(Connection conn, String row) {
+	public void update(Connection conn, String row) throws SQLException {
 
 		// TODO: Primero hay que comprobar que la tupla exista en la BDD, y ya luego
 		// hacemos el update
 
-		try {
-			st = conn.prepareStatement("UPDATE bien_amortizable SET ? = ? WHERE id = ?");
+		st = conn.prepareStatement("UPDATE bien_amortizable SET ? = ? WHERE id = ?");
 
-			switch (row.toLowerCase()) {
+		switch (row.toLowerCase()) {
 
-			case "nombre": {
-				st.setString(1, "nombre");
-				st.setString(2, this.nombre);
-				st.setString(3, this.id);
+		case "nombre": {
+			st.setString(1, "nombre");
+			st.setString(2, this.nombre);
+			st.setString(3, this.id);
 
-				break;
-			}
+			break;
+		}
 
-			case "precio": {
-				st.setString(1, "precio");
-				st.setBigDecimal(2, this.precio);
-				st.setString(3, this.id);
-
-				st.execute();
-				break;
-			}
-
-			case "porcentaje": {
-				st.setString(1, "porcentaje_amor");
-				st.setBigDecimal(2, this.porcent_amort);
-				st.setString(3, this.id);
-
-				break;
-			}
-
-			case "tiempo": {
-				st.setString(1, "tiempo_amor");
-				st.setInt(2, this.tiempo_amort);
-				st.setString(3, this.id);
-
-				break;
-			}
-
-			case "anyo": {
-				st.setString(1, "anio_adquisicion");
-				st.setInt(2, this.anyo_adquisicion);
-				st.setString(3, this.id);
-
-				break;
-			}
-
-			default: {
-				JOptionPane.showMessageDialog(null,
-						"El campo al que trata de acceder no es actualizable " + "o no se encuentra en esta tabla.");
-
-			}
-
-			}
+		case "precio": {
+			st.setString(1, "precio");
+			st.setBigDecimal(2, this.precio);
+			st.setString(3, this.id);
 
 			st.execute();
+			break;
+		}
 
-		} catch (SQLException e) {
-			PostgreSQLHandler handler = new PostgreSQLHandler(e);
-			JOptionPane.showMessageDialog(null, handler.safeErrorHandling());
+		case "porcentaje": {
+			st.setString(1, "porcentaje_amor");
+			st.setBigDecimal(2, this.porcent_amort);
+			st.setString(3, this.id);
+
+			break;
+		}
+
+		case "tiempo": {
+			st.setString(1, "tiempo_amor");
+			st.setInt(2, this.tiempo_amort);
+			st.setString(3, this.id);
+
+			break;
+		}
+
+		case "anyo": {
+			st.setString(1, "anio_adquisicion");
+			st.setInt(2, this.anyo_adquisicion);
+			st.setString(3, this.id);
+
+			break;
+		}
+
+		default: {
+			JOptionPane.showMessageDialog(null,
+					"El campo al que trata de acceder no es actualizable " + "o no se encuentra en esta tabla.");
 
 		}
+
+		}
+
+		st.execute();
 
 	}
 
-	public void selectOne(Connection conn) {
-		try {
+	public void selectOne(Connection conn) throws SQLException {
 
-			// Comprobamos si el usuario ha introducido la id para la selección, si no,
-			// seleccionamos el primer valor de la tabla
-			if (this.id != null || this.id != "") {
-				st = conn.prepareStatement("SELECT * FROM bien_amortizable WHERE id = ?");
-				st.setString(1, this.id);
+		// Comprobamos si el usuario ha introducido la id para la selección, si no,
+		// seleccionamos el primer valor de la tabla
+		if (this.id != null || this.id != "") {
+			st = conn.prepareStatement("SELECT * FROM bien_amortizable WHERE id = ?");
+			st.setString(1, this.id);
 
-			} else {
-				st = conn.prepareStatement("SELECT * FROM bien_amortizable LIMIT 1");
-			}
-
-			res = st.executeQuery();
-
-			// Devolvemos toda la selección dentro del mismo objeto que la llama
-
-			this.id = res.getString("id");
-			this.tipo = res.getString("tipo_bien");
-			this.nombre = res.getString("nombre");
-			this.precio = res.getBigDecimal("precio");
-			this.porcent_amort = res.getBigDecimal("porcentaje_amor");
-			this.tiempo_amort = res.getInt("tiempo_amor");
-			this.anyo_adquisicion = res.getInt("anio_adquisicion");
-
-		} catch (SQLException e) {
-			PostgreSQLHandler handler = new PostgreSQLHandler(e);
-			JOptionPane.showMessageDialog(null, handler.safeErrorHandling());
-
+		} else {
+			st = conn.prepareStatement("SELECT * FROM bien_amortizable LIMIT 1");
 		}
+
+		res = st.executeQuery();
+
+		// Devolvemos toda la selección dentro del mismo objeto que la llama
+
+		this.id = res.getString("id");
+		this.tipo = res.getString("tipo_bien");
+		this.nombre = res.getString("nombre");
+		this.precio = res.getBigDecimal("precio");
+		this.porcent_amort = res.getBigDecimal("porcentaje_amor");
+		this.tiempo_amort = res.getInt("tiempo_amor");
+		this.anyo_adquisicion = res.getInt("anio_adquisicion");
+
 	}
 
-	public void selectNext(Connection conn) {
-		try {
+	public void selectNext(Connection conn) throws SQLException {
+		// Repetimos el proceso de selectOne, pero si esta vez no encuentra id en el
+		// objeto, mostrará la segunda entrada de la tabla (next from first).
+		if (this.id != null || this.id != "") {
+			st = conn.prepareStatement("SELECT * FROM bien_amortizable WHERE id > ? ORDER BY id LIMIT 1");
+			st.setString(1, this.id);
 
-			// Repetimos el proceso de selectOne, pero si esta vez no encuentra id en el
-			// objeto, mostrará la segunda entrada de la tabla (next from first).
-			if (this.id != null || this.id != "") {
-				st = conn.prepareStatement("SELECT * FROM bien_amortizable WHERE id > ? ORDER BY id LIMIT 1");
-				st.setString(1, this.id);
-
-			} else {
-				st = conn.prepareStatement("SELECT * FROM bien_amortizable WHERE id > 'BA0001' ORDER BY id LIMIT 1");
-			}
-
-			res = st.executeQuery();
-
-			// Devolvemos toda la selección dentro del mismo objeto que la llama
-			// TODO: ¿Esto es más óptimo que devolver el ResultSet?
-
-			this.id = res.getString("id");
-			this.tipo = res.getString("tipo_bien");
-			this.nombre = res.getString("nombre");
-			this.precio = res.getBigDecimal("precio");
-			this.porcent_amort = res.getBigDecimal("porcentaje_amor");
-			this.tiempo_amort = res.getInt("tiempo_amor");
-			this.anyo_adquisicion = res.getInt("anio_adquisicion");
-
-		} catch (SQLException e) {
-			PostgreSQLHandler handler = new PostgreSQLHandler(e);
-			JOptionPane.showMessageDialog(null, handler.safeErrorHandling());
-
+		} else {
+			st = conn.prepareStatement("SELECT * FROM bien_amortizable WHERE id > 'BA0001' ORDER BY id LIMIT 1");
 		}
+
+		res = st.executeQuery();
+
+		// Devolvemos toda la selección dentro del mismo objeto que la llama
+		// TODO: ¿Esto es más óptimo que devolver el ResultSet?
+
+		this.id = res.getString("id");
+		this.tipo = res.getString("tipo_bien");
+		this.nombre = res.getString("nombre");
+		this.precio = res.getBigDecimal("precio");
+		this.porcent_amort = res.getBigDecimal("porcentaje_amor");
+		this.tiempo_amort = res.getInt("tiempo_amor");
+		this.anyo_adquisicion = res.getInt("anio_adquisicion");
+
 	}
 
 	@Override

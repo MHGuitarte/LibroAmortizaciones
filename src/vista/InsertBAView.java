@@ -21,8 +21,10 @@ public class InsertBAView extends JDialog implements ActionListener {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private JLabel insBA_lId, insBA_lTipoBien, insBA_lNombre, insBA_lPrecio, insBA_lPorcentaje, insBA_lTiempo, insBA_lAnyo;
-	private JTextField insBA_tfId, insBA_tfTipoBien, insBA_tfNombre, insBA_tfPrecio, insBA_tfPorcentaje, insBA_tfTiempo, insBA_tfAnyo;
+	private JLabel insBA_lId, insBA_lTipoBien, insBA_lNombre, insBA_lPrecio, insBA_lPorcentaje, insBA_lTiempo,
+			insBA_lAnyo;
+	private JTextField insBA_tfId, insBA_tfTipoBien, insBA_tfNombre, insBA_tfPrecio, insBA_tfPorcentaje, insBA_tfTiempo,
+			insBA_tfAnyo;
 	private JButton insBA_btnConfirm, insBA_btnCancel;
 
 	private JPanel insBA_panel;
@@ -44,13 +46,13 @@ public class InsertBAView extends JDialog implements ActionListener {
 		this.insBA_lTiempo = new JLabel("Tiempo Amortización");
 		this.insBA_lAnyo = new JLabel("Año de compra");
 
-		this.insBA_tfId = new JTextField();
-		this.insBA_tfTipoBien = new JTextField();
-		this.insBA_tfNombre = new JTextField();
-		this.insBA_tfPrecio = new JTextField();
-		this.insBA_tfPorcentaje = new JTextField();
-		this.insBA_tfTiempo = new JTextField();
-		this.insBA_tfAnyo = new JTextField();
+		this.insBA_tfId = new JTextField(6);
+		this.insBA_tfTipoBien = new JTextField(6);
+		this.insBA_tfNombre = new JTextField(20);
+		this.insBA_tfPrecio = new JTextField(10);
+		this.insBA_tfPorcentaje = new JTextField(4);
+		this.insBA_tfTiempo = new JTextField(4);
+		this.insBA_tfAnyo = new JTextField(4);
 
 		this.insBA_btnConfirm = new JButton("Insertar");
 		this.insBA_btnCancel = new JButton("Cancelar");

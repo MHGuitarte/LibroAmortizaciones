@@ -8,8 +8,6 @@ import java.sql.SQLException;
 
 import javax.swing.JOptionPane;
 
-import Utils.PostgreSQLHandler;
-
 public class TipoBien {
 
 	private String id, elem_patr;
@@ -66,140 +64,110 @@ public class TipoBien {
 
 	// CRUD -----------------------
 
-	public void insert(Connection conn) {
+	public void insert(Connection conn) throws SQLException {
 
-		try {
-			st = conn.prepareStatement(
-					"INSERT INTO tipo_bien(id, elem_patr, tiempo_limite, porcentaje_max) VALUES (?, ?, ?, ?)");
+		st = conn.prepareStatement(
+				"INSERT INTO tipo_bien(id, elem_patr, tiempo_limite, porcentaje_max) VALUES (?, ?, ?, ?)");
 
-			st.setString(1, this.id);
+		st.setString(1, this.id);
+		st.setString(2, this.elem_patr);
+		st.setInt(3, this.tiempo_limite);
+		st.setBigDecimal(4, this.porcentaje_max);
+
+	}
+
+	public void delete(Connection conn) throws SQLException {
+		st = conn.prepareStatement("DELETE FROM tipo_bien WHERE id = ?");
+		st.setString(1, this.id);
+
+		st.execute();
+
+	}
+
+	public void update(Connection conn, String row) throws SQLException {
+		st = conn.prepareStatement("UPDATE tipo_bien SET ? = ? WHERE id = ?");
+
+		switch (row.toLowerCase()) {
+
+		case "elem_patr": {
+			st.setString(1, "elem_patr");
 			st.setString(2, this.elem_patr);
-			st.setInt(3, this.tiempo_limite);
-			st.setBigDecimal(4, this.porcentaje_max);
+			st.setString(3, this.id);
 
-		} catch (SQLException e) {
-			PostgreSQLHandler handler = new PostgreSQLHandler(e);
-			System.out.println(handler.safeErrorHandling());
+			break;
 		}
+
+		case "tiempo_limite": {
+			st.setString(1, "tiempo_limite");
+			st.setInt(2, this.tiempo_limite);
+			st.setString(3, this.id);
+
+			st.execute();
+			break;
+		}
+
+		case "porcentaje_max": {
+			st.setString(1, "porcentaje_max");
+			st.setBigDecimal(2, this.porcentaje_max);
+			st.setString(3, this.id);
+
+			break;
+		}
+
+		default: {
+			JOptionPane.showMessageDialog(null,
+					"El campo al que trata de acceder no es actualizable " + "o no se encuentra en esta tabla.");
+
+			break;
+		}
+
+		}
+
+		st.execute();
+
 	}
 
-	public void delete(Connection conn) {
-
-		try {
-			st = conn.prepareStatement("DELETE FROM tipo_bien WHERE id = ?");
+	public void selectOne(Connection conn) throws SQLException {
+		// Comprobamos si el usuario ha introducido la id para la selección, si no,
+		// seleccionamos el primer valor de la tabla
+		if (this.id != null || this.id != "") {
+			st = conn.prepareStatement("SELECT * FROM tipo_bien WHERE id = ?");
 			st.setString(1, this.id);
 
-			st.execute();
-		} catch (SQLException e) {
-			PostgreSQLHandler handler = new PostgreSQLHandler(e);
-			JOptionPane.showMessageDialog(null, handler.safeErrorHandling());
+		} else {
+			st = conn.prepareStatement("SELECT * FROM tipo_bien LIMIT 1");
 		}
+
+		res = st.executeQuery();
+
+		// Devolvemos toda la selección dentro del mismo objeto que la llama
+
+		this.id = res.getString("id");
+		this.elem_patr = res.getString("elem_patr");
+		this.tiempo_limite = res.getInt("tiempo_limite");
+		this.porcentaje_max = res.getBigDecimal("porcentaje_max");
 	}
 
-	public void update(Connection conn, String row) {
+	public void selectNext(Connection conn) throws SQLException {
+		// Repetimos el proceso de selectOne, pero si esta vez no encuentra id en el
+		// objeto, mostrará la segunda entrada de la tabla (next from first).
+		if (this.id != null || this.id != "") {
+			st = conn.prepareStatement("SELECT * FROM tipo_bien WHERE id > ? ORDER BY id LIMIT 1");
+			st.setString(1, this.id);
 
-		try {
-			st = conn.prepareStatement("UPDATE tipo_bien SET ? = ? WHERE id = ?");
-
-			switch (row.toLowerCase()) {
-
-			case "elem_patr": {
-				st.setString(1, "elem_patr");
-				st.setString(2, this.elem_patr);
-				st.setString(3, this.id);
-
-				break;
-			}
-
-			case "tiempo_limite": {
-				st.setString(1, "tiempo_limite");
-				st.setInt(2, this.tiempo_limite);
-				st.setString(3, this.id);
-
-				st.execute();
-				break;
-			}
-
-			case "porcentaje_max": {
-				st.setString(1, "porcentaje_max");
-				st.setBigDecimal(2, this.porcentaje_max);
-				st.setString(3, this.id);
-
-				break;
-			}
-
-			default: {
-				JOptionPane.showMessageDialog(null,
-						"El campo al que trata de acceder no es actualizable " + "o no se encuentra en esta tabla.");
-
-				break;
-			}
-
-			}
-
-			st.execute();
-		} catch (SQLException e) {
-			PostgreSQLHandler handler = new PostgreSQLHandler(e);
-			JOptionPane.showMessageDialog(null, handler.safeErrorHandling());
+		} else {
+			st = conn.prepareStatement("SELECT * FROM tipo_bien WHERE id > 'EP0001' ORDER BY id LIMIT 1");
 		}
 
-	}
+		res = st.executeQuery();
 
-	public void selectOne(Connection conn) {
-		try {
+		// Devolvemos toda la selección dentro del mismo objeto que la llama
+		// TODO: ¿Esto es más óptimo que devolver el ResultSet?
 
-			// Comprobamos si el usuario ha introducido la id para la selección, si no,
-			// seleccionamos el primer valor de la tabla
-			if (this.id != null || this.id != "") {
-				st = conn.prepareStatement("SELECT * FROM tipo_bien WHERE id = ?");
-				st.setString(1, this.id);
-
-			} else {
-				st = conn.prepareStatement("SELECT * FROM tipo_bien LIMIT 1");
-			}
-
-			res = st.executeQuery();
-
-			// Devolvemos toda la selección dentro del mismo objeto que la llama
-
-			this.id = res.getString("id");
-			this.elem_patr = res.getString("elem_patr");
-			this.tiempo_limite = res.getInt("tiempo_limite");
-			this.porcentaje_max = res.getBigDecimal("porcentaje_max");
-
-		} catch (SQLException e) {
-			PostgreSQLHandler handler = new PostgreSQLHandler(e);
-			JOptionPane.showMessageDialog(null, handler.safeErrorHandling());
-		}
-	}
-
-	public void selectNext(Connection conn) {
-		try {
-
-			// Repetimos el proceso de selectOne, pero si esta vez no encuentra id en el
-			// objeto, mostrará la segunda entrada de la tabla (next from first).
-			if (this.id != null || this.id != "") {
-				st = conn.prepareStatement("SELECT * FROM tipo_bien WHERE id > ? ORDER BY id LIMIT 1");
-				st.setString(1, this.id);
-
-			} else {
-				st = conn.prepareStatement("SELECT * FROM tipo_bien WHERE id > 'EP0001' ORDER BY id LIMIT 1");
-			}
-
-			res = st.executeQuery();
-
-			// Devolvemos toda la selección dentro del mismo objeto que la llama
-			// TODO: ¿Esto es más óptimo que devolver el ResultSet?
-
-			this.id = res.getString("id");
-			this.elem_patr = res.getString("elem_patr");
-			this.tiempo_limite = res.getInt("tiempo_limite");
-			this.porcentaje_max = res.getBigDecimal("porcentaje_max");
-
-		} catch (SQLException e) {
-			PostgreSQLHandler handler = new PostgreSQLHandler(e);
-			JOptionPane.showMessageDialog(null, handler.safeErrorHandling());
-		}
+		this.id = res.getString("id");
+		this.elem_patr = res.getString("elem_patr");
+		this.tiempo_limite = res.getInt("tiempo_limite");
+		this.porcentaje_max = res.getBigDecimal("porcentaje_max");
 	}
 
 }

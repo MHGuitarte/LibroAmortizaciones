@@ -24,7 +24,6 @@ public class PostgreSQLHandler extends Exception {
 		}
 
 		case "02": {
-			// Esto se puede amplificar con los tipos de datos incorrectos
 			responseStatement = "Error: No existen datos";
 			break;
 		}
