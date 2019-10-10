@@ -204,7 +204,7 @@ public class BienAmortizable {
 
 			// Comprobamos si el usuario ha introducido la id para la selección, si no,
 			// seleccionamos el primer valor de la tabla
-			if (this.id != null && this.id != "") {
+			if (this.id != null || this.id != "") {
 				st = conn.prepareStatement("SELECT * FROM bien_amortizable WHERE id = ?");
 				st.setString(1, this.id);
 
@@ -235,7 +235,7 @@ public class BienAmortizable {
 
 			// Repetimos el proceso de selectOne, pero si esta vez no encuentra id en el
 			// objeto, mostrará la segunda entrada de la tabla (next from first).
-			if (this.id != null && this.id != "") {
+			if (this.id != null || this.id != "") {
 				st = conn.prepareStatement("SELECT * FROM bien_amortizable WHERE id > ? ORDER BY id LIMIT 1");
 				st.setString(1, this.id);
 
