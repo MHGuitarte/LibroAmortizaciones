@@ -8,9 +8,9 @@ public class Conexion {
 
 	Connection connection;
 
-	private static final String DB_URL = "jdbc:postgresql://localhost/postgres";
-	private static final String USER = "usuario";
-	private static final String PASS = "10164DAW2";
+	private final String DB_URL = "jdbc:postgresql://localhost/postgres";
+	private final String USER = "usuario";
+	private final String PASS = "10164DAW2";
 
 	public Conexion() {
 		try {

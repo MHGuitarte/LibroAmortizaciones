@@ -37,11 +37,13 @@ public class PostgreSQLHandler {
 		}
 
 		default: {
-			responseStatement = "Error Code (0): Error no encontrado.";
+			responseStatement = "Error Code (?????): Error no encontrado.";
 		}
 
 		// TODO: Finish Error Code Handling
 		}
+		
+		//TODO: ISOLATE KINDS OF EXCEPTION IN ISOLATED CLASSES
 
 		return responseStatement;
 	}

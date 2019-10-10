@@ -134,6 +134,8 @@ public class BienAmortizable {
 	}
 
 	public void update(Connection conn, String row) {
+		
+		//TODO: Primero hay que comprobar que la tupla exista en la BDD, y ya luego hacemos el update
 
 		try {
 			st = conn.prepareStatement("UPDATE bien_amortizable SET ? = ? WHERE id = ?");
@@ -234,7 +236,7 @@ public class BienAmortizable {
 	public void selectNext(Connection conn) {
 		try {
 
-			// Repetimos el proceso de selectOne, pero si esta vez no encuentra id en el
+			// Repetimos el proceso de selectOne, pero si esta vez no encuentra id en  el
 			// objeto, mostrará la segunda entrada de la tabla (next from first).
 			if (this.id != null || this.id != "") {
 				st = conn.prepareStatement("SELECT * FROM bien_amortizable WHERE id > ? ORDER BY id LIMIT 1");

@@ -29,14 +29,14 @@ public class InsertBAView extends JDialog implements ActionListener {
 	private JPanel insBA_panel;
 
 	private GridLayout gdl = new GridLayout(8, 2);
-	
+
 	private InsertBAController baController;
 
 	public InsertBAView(JFrame parent, InsertBAController baController) {
 		super(parent);
-		
+
 		this.baController = baController;
-		
+
 		this.insBA_lId = new JLabel("Id");
 		this.insBA_lTipoBien = new JLabel("Tipo Bien");
 		this.insBA_lNombre = new JLabel("Nombre");
@@ -135,10 +135,10 @@ public class InsertBAView extends JDialog implements ActionListener {
 		switch (evt.getActionCommand()) {
 		case "Insertar": {
 			baController.insertBA();
-			
+
 			break;
 		}
-		
+
 		case "Cancelar": {
 			this.dispose();
 		}
