@@ -8,7 +8,6 @@ public class Conexion {
 
 	Connection connection;
 
-
 	private static final String DB_URL = "jdbc:postgresql://localhost/postgres";
 	private static final String USER = "usuario";
 	private static final String PASS = "10164DAW2";
@@ -18,17 +17,23 @@ public class Conexion {
 			Class.forName("org.postgresql.Driver");
 
 			connection = DriverManager.getConnection(DB_URL, USER, PASS);
+
 		} catch (SQLException | ClassNotFoundException e) {
 			e.printStackTrace();
 		}
 	}
-	
-	public Connection devolverConexion( ) {
+
+	public Connection devolverConexion() {
+		System.out.println("Conexión devuelta");
 		return connection;
 	}
-	
-	public void cerrarConexion() throws SQLException {
-		connection.close();
+
+	public void cerrarConexion() {
+		try {
+			connection.close();
+		} catch (SQLException e) {
+			System.out.println("Surgió un error al cerrar la conexión, inténtelo más tarde.");
+		}
 	}
 
 	@SuppressWarnings("deprecation")
@@ -37,7 +42,5 @@ public class Conexion {
 		cerrarConexion();
 		super.finalize();
 	}
-	
-	
 
 }

@@ -1,11 +1,16 @@
 package vista;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 
-public class MainView extends JFrame {
+import controlador.MainController;
+
+public class MainView extends JFrame implements ActionListener {
 
 	/**
 	 * 
@@ -15,12 +20,9 @@ public class MainView extends JFrame {
 	private JMenu main_menuTipoBien;
 	private JMenuItem main_itemInsertTipoBien, main_itemUpdateTipoBien, main_itemDeleteTipoBien,
 			main_itemSelectTipoBien;
+	private MainController mainController;
 
-	public MainView() {
-		this.setTitle("Libro Amortizaciones");
-		this.setSize(640, 480);
-		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-		this.setResizable(true);
+	public MainView(MainController mainController) {
 
 		main_menuBar = new JMenuBar();
 
@@ -31,33 +33,60 @@ public class MainView extends JFrame {
 		main_itemDeleteTipoBien = new JMenuItem("Borrar Tipo Bien");
 		main_itemSelectTipoBien = new JMenuItem("Consultar Tipo Bien");
 
+	}
+
+	public void loadWindow() {
+		this.mainController = new MainController();
+
+		this.setTitle("Libro Amortizaciones");
+		this.setSize(640, 480);
+		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+		this.setResizable(true);
+		this.setLocationRelativeTo(null);
+
 		main_menuTipoBien.add(main_itemSelectTipoBien);
 		main_menuTipoBien.add(main_itemInsertTipoBien);
 		main_menuTipoBien.add(main_itemUpdateTipoBien);
 		main_menuTipoBien.add(main_itemDeleteTipoBien);
 
+		main_itemSelectTipoBien.addActionListener(this);
+		main_itemInsertTipoBien.addActionListener(this);
+		main_itemDeleteTipoBien.addActionListener(this);
+		main_itemUpdateTipoBien.addActionListener(this);
+
 		main_menuBar.add(main_menuTipoBien);
 
 		this.setJMenuBar(main_menuBar);
-
 	}
 
-	public JMenuItem getMain_itemInsertTipoBien() {
-		return main_itemInsertTipoBien;
+	public void showWindow() {
+		this.setVisible(true);
 	}
 
-	public JMenuItem getMain_itemUpdateTipoBien() {
-		return main_itemUpdateTipoBien;
-	}
+	@Override
+	public void actionPerformed(ActionEvent evt) {
+		switch (evt.getActionCommand()) {
 
-	public JMenuItem getMain_itemDeleteTipoBien() {
-		return main_itemDeleteTipoBien;
-	}
+		case "Insertar Tipo Bien": {
+			mainController.openInsertDialog();
 
-	public JMenuItem getMain_itemSelectTipoBien() {
-		return main_itemSelectTipoBien;
+			break;
+		}
+		case "Modificar Tipo Bien": {
+
+			break;
+		}
+
+		case "Borrar Tipo Bien": {
+
+			break;
+		}
+		case "Consultar Tipo Bien": {
+
+			break;
+		}
+
+		}
 	}
-	
-	
 
 }

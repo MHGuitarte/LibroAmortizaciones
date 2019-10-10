@@ -6,6 +6,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import javax.swing.JOptionPane;
+
 import Utils.PostgreSQLHandler;
 
 public class TipoBien {
@@ -90,7 +92,7 @@ public class TipoBien {
 			st.execute();
 		} catch (SQLException e) {
 			PostgreSQLHandler handler = new PostgreSQLHandler(e);
-			System.out.println(handler.safeErrorHandling());
+			JOptionPane.showMessageDialog(null, handler.safeErrorHandling());
 		}
 	}
 
@@ -127,7 +129,7 @@ public class TipoBien {
 			}
 
 			default: {
-				System.out.println(
+				JOptionPane.showMessageDialog(null,
 						"El campo al que trata de acceder no es actualizable " + "o no se encuentra en esta tabla.");
 
 				break;
@@ -138,7 +140,7 @@ public class TipoBien {
 			st.execute();
 		} catch (SQLException e) {
 			PostgreSQLHandler handler = new PostgreSQLHandler(e);
-			System.out.println(handler.safeErrorHandling());
+			JOptionPane.showMessageDialog(null, handler.safeErrorHandling());
 		}
 
 	}
@@ -167,7 +169,7 @@ public class TipoBien {
 
 		} catch (SQLException e) {
 			PostgreSQLHandler handler = new PostgreSQLHandler(e);
-			System.out.println(handler.safeErrorHandling());
+			JOptionPane.showMessageDialog(null, handler.safeErrorHandling());
 		}
 	}
 
@@ -196,7 +198,7 @@ public class TipoBien {
 
 		} catch (SQLException e) {
 			PostgreSQLHandler handler = new PostgreSQLHandler(e);
-			System.out.println(handler.safeErrorHandling());
+			JOptionPane.showMessageDialog(null, handler.safeErrorHandling());
 		}
 	}
 

@@ -6,9 +6,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import javax.swing.JOptionPane;
+
 import Utils.PostgreSQLHandler;
 
-@SuppressWarnings("unused")
 public class BienAmortizable {
 
 	private String id, nombre, tipo;
@@ -108,16 +109,12 @@ public class BienAmortizable {
 			st.setLong(6, this.tiempo_amort);
 			st.setLong(7, this.anyo_adquisicion);
 
-			/*
-			 * st.execute( "INSERT INTO bien_amortizable(id, tipo_bien, nombre, precio,
-			 * porcentaje_amor, tiempo_amor, anio_adquisicion) VALUES ('" + this.id + "', '"
-			 * + this.tipo + "', '" + this.nombre + "', " + this.precio + ", " +
-			 * this.porcent_amort + ", " + this.tiempo_amort + ", " + this.anyo_adquisicion
-			 * + ");");
-			 */
+			st.execute();
+
 		} catch (SQLException e) {
 			PostgreSQLHandler handler = new PostgreSQLHandler(e);
-			System.out.println(handler.safeErrorHandling());
+			JOptionPane.showMessageDialog(null, handler.safeErrorHandling());
+
 		}
 	}
 
@@ -128,9 +125,11 @@ public class BienAmortizable {
 			st.setString(1, this.id);
 
 			st.execute();
+
 		} catch (SQLException e) {
 			PostgreSQLHandler handler = new PostgreSQLHandler(e);
-			System.out.println(handler.safeErrorHandling());
+			JOptionPane.showMessageDialog(null, handler.safeErrorHandling());
+
 		}
 	}
 
@@ -183,18 +182,19 @@ public class BienAmortizable {
 			}
 
 			default: {
-				System.out.println(
+				JOptionPane.showMessageDialog(null,
 						"El campo al que trata de acceder no es actualizable " + "o no se encuentra en esta tabla.");
 
-				break;
 			}
 
 			}
 
 			st.execute();
+
 		} catch (SQLException e) {
 			PostgreSQLHandler handler = new PostgreSQLHandler(e);
-			System.out.println(handler.safeErrorHandling());
+			JOptionPane.showMessageDialog(null, handler.safeErrorHandling());
+
 		}
 
 	}
@@ -226,7 +226,8 @@ public class BienAmortizable {
 
 		} catch (SQLException e) {
 			PostgreSQLHandler handler = new PostgreSQLHandler(e);
-			System.out.println(handler.safeErrorHandling());
+			JOptionPane.showMessageDialog(null, handler.safeErrorHandling());
+
 		}
 	}
 
@@ -258,8 +259,16 @@ public class BienAmortizable {
 
 		} catch (SQLException e) {
 			PostgreSQLHandler handler = new PostgreSQLHandler(e);
-			System.out.println(handler.safeErrorHandling());
+			JOptionPane.showMessageDialog(null, handler.safeErrorHandling());
+
 		}
+	}
+
+	@Override
+	public String toString() {
+		// TODO Auto-generated method stub
+		return id + ", " + tipo + ", " + nombre + ", " + precio + ", " + porcent_amort + ", " + tiempo_amort + ", "
+				+ anyo_adquisicion + ". ";
 	}
 
 }

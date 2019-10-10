@@ -6,6 +6,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import javax.swing.JOptionPane;
+
 import Utils.PostgreSQLHandler;
 
 public class Amortizacion {
@@ -76,7 +78,7 @@ public class Amortizacion {
 
 		} catch (SQLException e) {
 			PostgreSQLHandler handler = new PostgreSQLHandler(e);
-			System.out.println(handler.safeErrorHandling());
+			JOptionPane.showMessageDialog(null, handler.safeErrorHandling());
 		}
 	}
 
@@ -90,7 +92,7 @@ public class Amortizacion {
 			st.execute();
 		} catch (SQLException e) {
 			PostgreSQLHandler handler = new PostgreSQLHandler(e);
-			System.out.println(handler.safeErrorHandling());
+			JOptionPane.showMessageDialog(null, handler.safeErrorHandling());
 		}
 	}
 
@@ -123,7 +125,7 @@ public class Amortizacion {
 			}
 
 			default: {
-				System.out.println(
+				JOptionPane.showMessageDialog(null,
 						"El campo al que trata de acceder no es actualizable " + "o no se encuentra en esta tabla.");
 
 				break;
@@ -134,7 +136,7 @@ public class Amortizacion {
 			st.execute();
 		} catch (SQLException e) {
 			PostgreSQLHandler handler = new PostgreSQLHandler(e);
-			System.out.println(handler.safeErrorHandling());
+			JOptionPane.showMessageDialog(null, handler.safeErrorHandling());
 		}
 
 	}
@@ -164,7 +166,7 @@ public class Amortizacion {
 
 		} catch (SQLException e) {
 			PostgreSQLHandler handler = new PostgreSQLHandler(e);
-			System.out.println(handler.safeErrorHandling());
+			JOptionPane.showMessageDialog(null, handler.safeErrorHandling());
 		}
 	}
 
@@ -195,7 +197,7 @@ public class Amortizacion {
 
 		} catch (SQLException e) {
 			PostgreSQLHandler handler = new PostgreSQLHandler(e);
-			System.out.println(handler.safeErrorHandling());
+			JOptionPane.showMessageDialog(null, handler.safeErrorHandling());
 		}
 	}
 
