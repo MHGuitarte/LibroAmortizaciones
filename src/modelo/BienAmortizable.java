@@ -109,73 +109,94 @@ public class BienAmortizable {
 
 	}
 
-	public void delete(Connection conn) throws SQLException {
+	public void delete(Connection conn) throws Exception, SQLException {
 
-		st = conn.prepareStatement("DELETE FROM bien_amortizable WHERE id = ?");
+		st = conn.prepareStatement("SELECT id FROM bien_amortizable WHERE id = ?");
 		st.setString(1, this.id);
 
-		st.execute();
+		res = st.executeQuery();
+
+		if (!res.next()) {
+			st = conn.prepareStatement("DELETE FROM bien_amortizable WHERE id = ?");
+			st.setString(1, this.id);
+
+			st.execute();
+
+		} else {
+			throw new Exception("No existe el registro a eliminar");
+		}
 	}
 
-	public void update(Connection conn, String row) throws SQLException {
+	public void update(Connection conn, String row) throws Exception, SQLException {
 
 		// TODO: Primero hay que comprobar que la tupla exista en la BDD, y ya luego
 		// hacemos el update
 
-		st = conn.prepareStatement("UPDATE bien_amortizable SET ? = ? WHERE id = ?");
+		st = conn.prepareStatement("SELECT id FROM bien_amortizable WHERE id = ?");
+		st.setString(1, this.id);
 
-		switch (row.toLowerCase()) {
+		res = st.executeQuery();
 
-		case "nombre": {
-			st.setString(1, "nombre");
-			st.setString(2, this.nombre);
-			st.setString(3, this.id);
+		if (!res.next()) {
 
-			break;
-		}
+			st = conn.prepareStatement("UPDATE bien_amortizable SET ? = ? WHERE id = ?");
 
-		case "precio": {
-			st.setString(1, "precio");
-			st.setBigDecimal(2, this.precio);
-			st.setString(3, this.id);
+			switch (row.toLowerCase()) {
+
+			case "nombre": {
+				st.setString(1, "nombre");
+				st.setString(2, this.nombre);
+				st.setString(3, this.id);
+
+				break;
+			}
+
+			case "precio": {
+				st.setString(1, "precio");
+				st.setBigDecimal(2, this.precio);
+				st.setString(3, this.id);
+
+				st.execute();
+				break;
+			}
+
+			case "porcentaje": {
+				st.setString(1, "porcentaje_amor");
+				st.setBigDecimal(2, this.porcent_amort);
+				st.setString(3, this.id);
+
+				break;
+			}
+
+			case "tiempo": {
+				st.setString(1, "tiempo_amor");
+				st.setInt(2, this.tiempo_amort);
+				st.setString(3, this.id);
+
+				break;
+			}
+
+			case "anyo": {
+				st.setString(1, "anio_adquisicion");
+				st.setInt(2, this.anyo_adquisicion);
+				st.setString(3, this.id);
+
+				break;
+			}
+
+			default: {
+				JOptionPane.showMessageDialog(null,
+						"El campo al que trata de acceder no es actualizable " + "o no se encuentra en esta tabla.");
+
+			}
+
+			}
 
 			st.execute();
-			break;
+
+		} else {
+			throw new Exception("No existe el registro a eliminar");
 		}
-
-		case "porcentaje": {
-			st.setString(1, "porcentaje_amor");
-			st.setBigDecimal(2, this.porcent_amort);
-			st.setString(3, this.id);
-
-			break;
-		}
-
-		case "tiempo": {
-			st.setString(1, "tiempo_amor");
-			st.setInt(2, this.tiempo_amort);
-			st.setString(3, this.id);
-
-			break;
-		}
-
-		case "anyo": {
-			st.setString(1, "anio_adquisicion");
-			st.setInt(2, this.anyo_adquisicion);
-			st.setString(3, this.id);
-
-			break;
-		}
-
-		default: {
-			JOptionPane.showMessageDialog(null,
-					"El campo al que trata de acceder no es actualizable " + "o no se encuentra en esta tabla.");
-
-		}
-
-		}
-
-		st.execute();
 
 	}
 
@@ -219,23 +240,15 @@ public class BienAmortizable {
 		res = st.executeQuery();
 
 		// Devolvemos toda la selección dentro del mismo objeto que la llama
-		// TODO: ¿Esto es más óptimo que devolver el ResultSet?
-
-		this.id = res.getString("id");
-		this.tipo = res.getString("tipo_bien");
-		this.nombre = res.getString("nombre");
-		this.precio = res.getBigDecimal("precio");
-		this.porcent_amort = res.getBigDecimal("porcentaje_amor");
-		this.tiempo_amort = res.getInt("tiempo_amor");
-		this.anyo_adquisicion = res.getInt("anio_adquisicion");
-
-	}
-
-	@Override
-	public String toString() {
-		// TODO Auto-generated method stub
-		return id + ", " + tipo + ", " + nombre + ", " + precio + ", " + porcent_amort + ", " + tiempo_amort + ", "
-				+ anyo_adquisicion + ". ";
+		if (res.next()) {
+			this.id = res.getString("id");
+			this.tipo = res.getString("tipo_bien");
+			this.nombre = res.getString("nombre");
+			this.precio = res.getBigDecimal("precio");
+			this.porcent_amort = res.getBigDecimal("porcentaje_amor");
+			this.tiempo_amort = res.getInt("tiempo_amor");
+			this.anyo_adquisicion = res.getInt("anio_adquisicion");
+		}
 	}
 
 }
