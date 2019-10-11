@@ -9,6 +9,7 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
@@ -29,14 +30,14 @@ public class InsertBAView extends JDialog implements ActionListener {
 	private JPanel insBA_panel;
 
 	private GridLayout gdl = new GridLayout(8, 2);
-	
+
 	private InsertBAController baController;
 
 	public InsertBAView(JFrame parent, InsertBAController baController) {
 		super(parent);
-		
+
 		this.baController = baController;
-		
+
 		this.insBA_lId = new JLabel("Id");
 		this.insBA_lTipoBien = new JLabel("Tipo Bien");
 		this.insBA_lNombre = new JLabel("Nombre");
@@ -45,13 +46,13 @@ public class InsertBAView extends JDialog implements ActionListener {
 		this.insBA_lTiempo = new JLabel("Tiempo Amortización");
 		this.insBA_lAnyo = new JLabel("Año de compra");
 
-		this.insBA_tfId = new JTextField();
-		this.insBA_tfTipoBien = new JTextField();
-		this.insBA_tfNombre = new JTextField();
-		this.insBA_tfPrecio = new JTextField();
-		this.insBA_tfPorcentaje = new JTextField();
-		this.insBA_tfTiempo = new JTextField();
-		this.insBA_tfAnyo = new JTextField();
+		this.insBA_tfId = new JTextField(6);
+		this.insBA_tfTipoBien = new JTextField(6);
+		this.insBA_tfNombre = new JTextField(20);
+		this.insBA_tfPrecio = new JTextField(10);
+		this.insBA_tfPorcentaje = new JTextField(4);
+		this.insBA_tfTiempo = new JTextField(4);
+		this.insBA_tfAnyo = new JTextField(4);
 
 		this.insBA_btnConfirm = new JButton("Insertar");
 		this.insBA_btnCancel = new JButton("Cancelar");
@@ -135,14 +136,17 @@ public class InsertBAView extends JDialog implements ActionListener {
 		switch (evt.getActionCommand()) {
 		case "Insertar": {
 			baController.insertBA();
-			
+
 			break;
 		}
-		
+
 		case "Cancelar": {
 			this.dispose();
 		}
 		}
 	}
 
+	public void showMessage(String message) {
+		JOptionPane.showMessageDialog(this, message);
+	}
 }

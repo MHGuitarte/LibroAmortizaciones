@@ -73,7 +73,7 @@ public class MainView extends JFrame implements ActionListener {
 			break;
 		}
 		case "Modificar Tipo Bien": {
-
+			
 			break;
 		}
 

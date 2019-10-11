@@ -8,8 +8,6 @@ import java.sql.SQLException;
 
 import javax.swing.JOptionPane;
 
-import Utils.PostgreSQLHandler;
-
 public class BienAmortizable {
 
 	private String id, nombre, tipo;
@@ -95,47 +93,52 @@ public class BienAmortizable {
 
 	// CRUD -----------------------
 
-	public void insert(Connection conn) {
+	public void insert(Connection conn) throws SQLException {
+		st = conn.prepareStatement("INSERT INTO bien_amortizable(id, tipo_bien, nombre, precio,"
+				+ "porcentaje_amor, tiempo_amor, anio_adquisicion) VALUES" + "(?, ?, ?, ?, ?, ?, ?)");
 
-		try {
-			st = conn.prepareStatement("INSERT INTO bien_amortizable(id, tipo_bien, nombre, precio,"
-					+ "porcentaje_amor, tiempo_amor, anio_adquisicion) VALUES" + "(?, ?, ?, ?, ?, ?, ?)");
+		st.setString(1, this.id);
+		st.setString(2, this.tipo);
+		st.setString(3, this.nombre);
+		st.setBigDecimal(4, this.precio);
+		st.setBigDecimal(5, this.porcent_amort);
+		st.setLong(6, this.tiempo_amort);
+		st.setLong(7, this.anyo_adquisicion);
 
-			st.setString(1, this.id);
-			st.setString(2, this.tipo);
-			st.setString(3, this.nombre);
-			st.setBigDecimal(4, this.precio);
-			st.setBigDecimal(5, this.porcent_amort);
-			st.setLong(6, this.tiempo_amort);
-			st.setLong(7, this.anyo_adquisicion);
+		st.execute();
 
-			st.execute();
-
-		} catch (SQLException e) {
-			PostgreSQLHandler handler = new PostgreSQLHandler(e);
-			JOptionPane.showMessageDialog(null, handler.safeErrorHandling());
-
-		}
 	}
 
-	public void delete(Connection conn) {
+	public void delete(Connection conn) throws Exception, SQLException {
 
-		try {
+		st = conn.prepareStatement("SELECT id FROM bien_amortizable WHERE id = ?");
+		st.setString(1, this.id);
+
+		res = st.executeQuery();
+
+		if (!res.next()) {
 			st = conn.prepareStatement("DELETE FROM bien_amortizable WHERE id = ?");
 			st.setString(1, this.id);
 
 			st.execute();
 
-		} catch (SQLException e) {
-			PostgreSQLHandler handler = new PostgreSQLHandler(e);
-			JOptionPane.showMessageDialog(null, handler.safeErrorHandling());
-
+		} else {
+			throw new Exception("No existe el registro a eliminar");
 		}
 	}
 
-	public void update(Connection conn, String row) {
+	public void update(Connection conn, String row) throws Exception, SQLException {
 
-		try {
+		// TODO: Primero hay que comprobar que la tupla exista en la BDD, y ya luego
+		// hacemos el update
+
+		st = conn.prepareStatement("SELECT id FROM bien_amortizable WHERE id = ?");
+		st.setString(1, this.id);
+
+		res = st.executeQuery();
+
+		if (!res.next()) {
+
 			st = conn.prepareStatement("UPDATE bien_amortizable SET ? = ? WHERE id = ?");
 
 			switch (row.toLowerCase()) {
@@ -191,31 +194,53 @@ public class BienAmortizable {
 
 			st.execute();
 
-		} catch (SQLException e) {
-			PostgreSQLHandler handler = new PostgreSQLHandler(e);
-			JOptionPane.showMessageDialog(null, handler.safeErrorHandling());
-
+		} else {
+			throw new Exception("No existe el registro a eliminar");
 		}
 
 	}
 
-	public void selectOne(Connection conn) {
-		try {
+	public void selectOne(Connection conn) throws SQLException {
 
-			// Comprobamos si el usuario ha introducido la id para la selección, si no,
-			// seleccionamos el primer valor de la tabla
-			if (this.id != null || this.id != "") {
-				st = conn.prepareStatement("SELECT * FROM bien_amortizable WHERE id = ?");
-				st.setString(1, this.id);
+		// Comprobamos si el usuario ha introducido la id para la selección, si no,
+		// seleccionamos el primer valor de la tabla
+		if (this.id != null || this.id != "") {
+			st = conn.prepareStatement("SELECT * FROM bien_amortizable WHERE id = ?");
+			st.setString(1, this.id);
 
-			} else {
-				st = conn.prepareStatement("SELECT * FROM bien_amortizable LIMIT 1");
-			}
+		} else {
+			st = conn.prepareStatement("SELECT * FROM bien_amortizable LIMIT 1");
+		}
 
-			res = st.executeQuery();
+		res = st.executeQuery();
 
-			// Devolvemos toda la selección dentro del mismo objeto que la llama
+		// Devolvemos toda la selección dentro del mismo objeto que la llama
 
+		this.id = res.getString("id");
+		this.tipo = res.getString("tipo_bien");
+		this.nombre = res.getString("nombre");
+		this.precio = res.getBigDecimal("precio");
+		this.porcent_amort = res.getBigDecimal("porcentaje_amor");
+		this.tiempo_amort = res.getInt("tiempo_amor");
+		this.anyo_adquisicion = res.getInt("anio_adquisicion");
+
+	}
+
+	public void selectNext(Connection conn) throws SQLException {
+		// Repetimos el proceso de selectOne, pero si esta vez no encuentra id en el
+		// objeto, mostrará la segunda entrada de la tabla (next from first).
+		if (this.id != null || this.id != "") {
+			st = conn.prepareStatement("SELECT * FROM bien_amortizable WHERE id > ? ORDER BY id LIMIT 1");
+			st.setString(1, this.id);
+
+		} else {
+			st = conn.prepareStatement("SELECT * FROM bien_amortizable WHERE id > 'BA0001' ORDER BY id LIMIT 1");
+		}
+
+		res = st.executeQuery();
+
+		// Devolvemos toda la selección dentro del mismo objeto que la llama
+		if (res.next()) {
 			this.id = res.getString("id");
 			this.tipo = res.getString("tipo_bien");
 			this.nombre = res.getString("nombre");
@@ -223,52 +248,7 @@ public class BienAmortizable {
 			this.porcent_amort = res.getBigDecimal("porcentaje_amor");
 			this.tiempo_amort = res.getInt("tiempo_amor");
 			this.anyo_adquisicion = res.getInt("anio_adquisicion");
-
-		} catch (SQLException e) {
-			PostgreSQLHandler handler = new PostgreSQLHandler(e);
-			JOptionPane.showMessageDialog(null, handler.safeErrorHandling());
-
 		}
-	}
-
-	public void selectNext(Connection conn) {
-		try {
-
-			// Repetimos el proceso de selectOne, pero si esta vez no encuentra id en el
-			// objeto, mostrará la segunda entrada de la tabla (next from first).
-			if (this.id != null || this.id != "") {
-				st = conn.prepareStatement("SELECT * FROM bien_amortizable WHERE id > ? ORDER BY id LIMIT 1");
-				st.setString(1, this.id);
-
-			} else {
-				st = conn.prepareStatement("SELECT * FROM bien_amortizable WHERE id > 'BA0001' ORDER BY id LIMIT 1");
-			}
-
-			res = st.executeQuery();
-
-			// Devolvemos toda la selección dentro del mismo objeto que la llama
-			// TODO: ¿Esto es más óptimo que devolver el ResultSet?
-
-			this.id = res.getString("id");
-			this.tipo = res.getString("tipo_bien");
-			this.nombre = res.getString("nombre");
-			this.precio = res.getBigDecimal("precio");
-			this.porcent_amort = res.getBigDecimal("porcentaje_amor");
-			this.tiempo_amort = res.getInt("tiempo_amor");
-			this.anyo_adquisicion = res.getInt("anio_adquisicion");
-
-		} catch (SQLException e) {
-			PostgreSQLHandler handler = new PostgreSQLHandler(e);
-			JOptionPane.showMessageDialog(null, handler.safeErrorHandling());
-
-		}
-	}
-
-	@Override
-	public String toString() {
-		// TODO Auto-generated method stub
-		return id + ", " + tipo + ", " + nombre + ", " + precio + ", " + porcent_amort + ", " + tiempo_amort + ", "
-				+ anyo_adquisicion + ". ";
 	}
 
 }
