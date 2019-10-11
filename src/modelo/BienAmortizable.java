@@ -116,7 +116,7 @@ public class BienAmortizable {
 
 		res = st.executeQuery();
 
-		if (!res.next()) {
+		if (res.next()) {
 			st = conn.prepareStatement("DELETE FROM bien_amortizable WHERE id = ?");
 			st.setString(1, this.id);
 
@@ -128,9 +128,6 @@ public class BienAmortizable {
 	}
 
 	public void update(Connection conn, String row) throws Exception, SQLException {
-
-		// TODO: Primero hay que comprobar que la tupla exista en la BDD, y ya luego
-		// hacemos el update
 
 		st = conn.prepareStatement("SELECT id FROM bien_amortizable WHERE id = ?");
 		st.setString(1, this.id);

@@ -33,6 +33,9 @@ public class InsertBAController {
 			conexion = new Conexion();
 			bienAmortizable.insert(conexion.devolverConexion());
 
+			insBA.showMessage("Transacción realizada correctamente");
+			insBA.dispose();
+
 		} catch (SQLException e) {
 			PostgreSQLHandler handler = new PostgreSQLHandler(e);
 			insBA.showMessage(handler.safeErrorHandling());

@@ -20,11 +20,13 @@ public class MainController {
 	}
 
 	public void openUpdateDialog() {
-
+		UpdateBAController baController = new UpdateBAController();
+		baController.init(view);
 	}
 
 	public void openDeleteDialog() {
-
+		DeleteBAController baController = new DeleteBAController();
+		baController.init(view);
 	}
 
 	public void openSelectDialog() {
