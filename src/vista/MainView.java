@@ -67,21 +67,21 @@ public class MainView extends JFrame implements ActionListener {
 	public void actionPerformed(ActionEvent evt) {
 		switch (evt.getActionCommand()) {
 
-		case "Insertar Tipo Bien": {
+		case "Insertar Bien Amortizable": {
 			mainController.openInsertDialog();
 
 			break;
 		}
-		case "Modificar Tipo Bien": {
-			
+		case "Modificar Bien Amortizable": {
+			mainController.openUpdateDialog();
 			break;
 		}
 
-		case "Borrar Tipo Bien": {
-
+		case "Borrar Bien Amortizable": {
+			mainController.openDeleteDialog();
 			break;
 		}
-		case "Consultar Tipo Bien": {
+		case "Consultar Bien Amortizable": {
 
 			break;
 		}

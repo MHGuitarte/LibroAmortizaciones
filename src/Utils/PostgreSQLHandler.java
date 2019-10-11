@@ -9,6 +9,7 @@ public class PostgreSQLHandler extends Exception {
 
 	public PostgreSQLHandler(SQLException e) {
 		this.error = e;
+
 	}
 
 	public String safeErrorHandling() {
