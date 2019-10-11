@@ -22,6 +22,7 @@ public class MainController {
 	public void openUpdateDialog() {
 		UpdateBAController baController = new UpdateBAController();
 		baController.init(view);
+		//TODO: CONTINUE FROM HERE
 	}
 
 	public void openDeleteDialog() {

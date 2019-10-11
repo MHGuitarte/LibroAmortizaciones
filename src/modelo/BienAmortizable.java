@@ -127,7 +127,7 @@ public class BienAmortizable {
 		}
 	}
 
-	public void update(Connection conn, String row) throws Exception, SQLException {
+	public void update(Connection conn, String col) throws Exception, SQLException {
 
 		st = conn.prepareStatement("SELECT id FROM bien_amortizable WHERE id = ?");
 		st.setString(1, this.id);
@@ -138,7 +138,7 @@ public class BienAmortizable {
 
 			st = conn.prepareStatement("UPDATE bien_amortizable SET ? = ? WHERE id = ?");
 
-			switch (row.toLowerCase()) {
+			switch (col.toLowerCase()) {
 
 			case "nombre": {
 				st.setString(1, "nombre");
@@ -173,7 +173,7 @@ public class BienAmortizable {
 				break;
 			}
 
-			case "anyo": {
+			case "año": {
 				st.setString(1, "anio_adquisicion");
 				st.setInt(2, this.anyo_adquisicion);
 				st.setString(3, this.id);

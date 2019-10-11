@@ -69,7 +69,6 @@ public class MainView extends JFrame implements ActionListener {
 
 		case "Insertar Bien Amortizable": {
 			mainController.openInsertDialog();
-
 			break;
 		}
 		case "Modificar Bien Amortizable": {
