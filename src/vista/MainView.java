@@ -26,12 +26,12 @@ public class MainView extends JFrame implements ActionListener {
 
 		main_menuBar = new JMenuBar();
 
-		main_menuTipoBien = new JMenu("Tipo Bien");
+		main_menuTipoBien = new JMenu("Bien Amortizable");
 
-		main_itemInsertTipoBien = new JMenuItem("Insertar Tipo Bien");
-		main_itemUpdateTipoBien = new JMenuItem("Modificar Tipo Bien");
-		main_itemDeleteTipoBien = new JMenuItem("Borrar Tipo Bien");
-		main_itemSelectTipoBien = new JMenuItem("Consultar Tipo Bien");
+		main_itemInsertTipoBien = new JMenuItem("Insertar Bien Amortizable");
+		main_itemUpdateTipoBien = new JMenuItem("Modificar Bien Amortizable");
+		main_itemDeleteTipoBien = new JMenuItem("Borrar Bien Amortizable");
+		main_itemSelectTipoBien = new JMenuItem("Consultar Bien Amortizable");
 
 	}
 
@@ -69,9 +69,9 @@ public class MainView extends JFrame implements ActionListener {
 
 		case "Insertar Bien Amortizable": {
 			mainController.openInsertDialog();
-
 			break;
 		}
+
 		case "Modificar Bien Amortizable": {
 			mainController.openUpdateDialog();
 			break;
@@ -81,6 +81,7 @@ public class MainView extends JFrame implements ActionListener {
 			mainController.openDeleteDialog();
 			break;
 		}
+
 		case "Consultar Bien Amortizable": {
 
 			break;

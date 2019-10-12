@@ -15,18 +15,18 @@ public class MainController {
 	}
 
 	public void openInsertDialog() {
-		InsertBAController baController = new InsertBAController();
-		baController.init(view);
+		InsertBAController baInsController = new InsertBAController();
+		baInsController.init(view);
 	}
 
 	public void openUpdateDialog() {
-		UpdateBAController baController = new UpdateBAController();
-		baController.init(view);
+		UpdateBAController baUpController = new UpdateBAController();
+		baUpController.init(view);
 	}
 
 	public void openDeleteDialog() {
-		DeleteBAController baController = new DeleteBAController();
-		baController.init(view);
+		DeleteBAController baDelController = new DeleteBAController();
+		baDelController.init(view);
 	}
 
 	public void openSelectDialog() {

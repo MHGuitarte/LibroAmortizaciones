@@ -127,56 +127,59 @@ public class BienAmortizable {
 		}
 	}
 
-	public void update(Connection conn, String row) throws Exception, SQLException {
+	public void update(Connection conn, String col) throws Exception, SQLException {
 
 		st = conn.prepareStatement("SELECT id FROM bien_amortizable WHERE id = ?");
 		st.setString(1, this.id);
 
 		res = st.executeQuery();
 
-		if (!res.next()) {
+		if (res.next()) {
 
-			st = conn.prepareStatement("UPDATE bien_amortizable SET ? = ? WHERE id = ?");
-
-			switch (row.toLowerCase()) {
+			switch (col.toLowerCase()) {
 
 			case "nombre": {
-				st.setString(1, "nombre");
-				st.setString(2, this.nombre);
-				st.setString(3, this.id);
+				st = conn.prepareStatement("UPDATE bien_amortizable SET nombre = ? WHERE id = ?");
+
+				st.setString(1, this.nombre);
+				st.setString(2, this.id);
 
 				break;
 			}
 
 			case "precio": {
-				st.setString(1, "precio");
-				st.setBigDecimal(2, this.precio);
-				st.setString(3, this.id);
+				st = conn.prepareStatement("UPDATE bien_amortizable SET precio = ? WHERE id = ?");
+
+				st.setBigDecimal(1, this.precio);
+				st.setString(2, this.id);
 
 				st.execute();
 				break;
 			}
 
 			case "porcentaje": {
-				st.setString(1, "porcentaje_amor");
-				st.setBigDecimal(2, this.porcent_amort);
-				st.setString(3, this.id);
+				st = conn.prepareStatement("UPDATE bien_amortizable SET porcentaje_amor = ? WHERE id = ?");
+
+				st.setBigDecimal(1, this.porcent_amort);
+				st.setString(2, this.id);
 
 				break;
 			}
 
 			case "tiempo": {
-				st.setString(1, "tiempo_amor");
-				st.setInt(2, this.tiempo_amort);
-				st.setString(3, this.id);
+				st = conn.prepareStatement("UPDATE bien_amortizable SET tiempo_amor = ? WHERE id = ?");
+
+				st.setInt(1, this.tiempo_amort);
+				st.setString(2, this.id);
 
 				break;
 			}
 
-			case "anyo": {
-				st.setString(1, "anio_adquisicion");
-				st.setInt(2, this.anyo_adquisicion);
-				st.setString(3, this.id);
+			case "año": {
+				st = conn.prepareStatement("UPDATE bien_amortizable SET anio_adquisicion = ? WHERE id = ?");
+
+				st.setInt(1, this.anyo_adquisicion);
+				st.setString(2, this.id);
 
 				break;
 			}
@@ -246,6 +249,13 @@ public class BienAmortizable {
 			this.tiempo_amort = res.getInt("tiempo_amor");
 			this.anyo_adquisicion = res.getInt("anio_adquisicion");
 		}
+	}
+
+	@Override
+	public String toString() {
+		// TODO Auto-generated method stub
+		return id + ", " + nombre + ", " + tipo + ", " + precio + ", " + porcent_amort + ", " + tiempo_amort + ", "
+				+ anyo_adquisicion;
 	}
 
 }
