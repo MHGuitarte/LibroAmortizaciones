@@ -93,11 +93,11 @@ public class InsertBAView extends JDialog implements ActionListener {
 		insBA_btnCancel.addActionListener(this);
 
 		this.setTitle("Insertar Bien Amortizable");
-		this.setSize(640, 480);
 		this.setResizable(true);
 		this.add(insBA_panel);
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-		this.setLocationRelativeTo(null);
+		this.setLocationRelativeTo(super.getParent());
+		this.setModal(true);
 	}
 
 	public void showWindow() {

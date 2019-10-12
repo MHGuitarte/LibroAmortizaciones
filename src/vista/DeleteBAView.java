@@ -59,11 +59,11 @@ public class DeleteBAView extends JDialog implements ActionListener {
 		delBA_btnCancel.addActionListener(this);
 
 		this.setTitle("Eliminar Bien Amortizable");
-		this.setResizable(false);
+		this.setResizable(true);
 		this.add(delBA_panel);
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-		this.setLocationRelativeTo(null);
-
+		this.setLocationRelativeTo(super.getParent());
+		this.setModal(true);
 	}
 
 	public void showWindow() {

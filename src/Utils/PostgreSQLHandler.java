@@ -91,7 +91,7 @@ public class PostgreSQLHandler extends Exception {
 		}
 
 		case "23": {
-			responseStatement = "Violación de la integridad de una restricción. Comprueba que los valores no son nulos y que hacen referencias correctamente";
+			responseStatement = "Violación de la integridad. Compruebe los campos identificativos, los campos referenciales y los campos nulos, por favor.";
 			break;
 		}
 
